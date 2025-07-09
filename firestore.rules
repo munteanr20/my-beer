@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow users to read and write their own beers
+    match /beers/{beerId} {
+      allow read, write: if request.auth != null 
+        && request.auth.token.email.matches('.*@best-eu.org')
+        && request.auth.uid == resource.data.userId;
+    }
+    
+    // Allow users to create new beers
+    match /beers/{beerId} {
+      allow create: if request.auth != null 
+        && request.auth.token.email.matches('.*@best-eu.org')
+        && request.auth.uid == request.resource.data.userId;
+    }
+    
+    // Allow users to read and write their own profile
+    match /users/{userId} {
+      allow read, write: if request.auth != null 
+        && request.auth.token.email.matches('.*@best-eu.org')
+        && request.auth.uid == userId;
+    }
+    
+    // Allow users to create their own profile
+    match /users/{userId} {
+      allow create: if request.auth != null 
+        && request.auth.token.email.matches('.*@best-eu.org')
+        && request.auth.uid == userId;
+    }
+  }
+}
