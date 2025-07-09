@@ -28,37 +28,52 @@ export default function Dashboard() {
       {/* Header */}
       <header className="relative z-10 bg-[var(--tavern-dark)] shadow-lg border-b border-[var(--tavern-copper)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-3">
-              <div className="text-6xl transform hover:scale-110 transition-transform duration-300">🍺</div>
-              <h1 className="heading-font text-4xl font-bold text-[var(--tavern-gold)]" style={{ textShadow: '2px 2px 4px var(--tavern-copper)' }}>
-                Ghimbav's Tavern
-              </h1>
+          <div className="flex flex-col sm:flex-row justify-between items-center py-6 sm:py-4 space-y-6 sm:space-y-0">
+            {/* Logo and Title Section */}
+            <div className="flex items-center space-x-3 sm:space-x-3">
+              <div className="text-5xl sm:text-5xl lg:text-6xl transform hover:scale-110 transition-transform duration-300">🍺</div>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3">
+                <h1 className="heading-font text-3xl sm:text-3xl lg:text-4xl font-bold text-[var(--tavern-gold)] mb-1 sm:mb-0" style={{ textShadow: '2px 2px 4px var(--tavern-copper)' }}>
+                  Ghimbav's Tavern
+                </h1>
+                <span className="hidden sm:inline text-[var(--tavern-copper)] text-lg">|</span>
+                <span className="body-font text-sm sm:text-base text-[var(--tavern-cream)] opacity-80">
+                  Beer Tracker
+                </span>
+              </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
+
+            {/* User Info and Actions Section */}
+            <div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+              {/* User Profile Section */}
+              <div className="flex items-center space-x-3 sm:space-x-3 order-2 sm:order-1 mt-4">
                 {user.photoURL ? (
                   <img
                     src={user.photoURL}
                     alt="Profile"
-                    className="w-8 h-8 rounded-full border-2 border-[var(--tavern-gold)]"
+                    className="w-10 h-10 sm:w-10 sm:h-10 rounded-full border-2 border-[var(--tavern-gold)]"
                   />
                 ) : (
-                  <div className="w-8 h-8 bg-[var(--tavern-copper)] rounded-full flex items-center justify-center">
-                    <span className="text-[var(--tavern-dark)] text-sm font-medium">
+                  <div className="w-10 h-10 sm:w-10 sm:h-10 bg-[var(--tavern-copper)] rounded-full flex items-center justify-center">
+                    <span className="text-[var(--tavern-dark)] text-base sm:text-base font-medium">
                       {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
                     </span>
                   </div>
                 )}
-                <div className="body-font text-lg text-[var(--tavern-cream)] font-semibold" style={{ textShadow: '1px 1px 2px var(--tavern-copper)' }}>
-                  Welcome, {user.displayName || user.email}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
+                  <div className="body-font text-base sm:text-base text-[var(--tavern-cream)] font-semibold text-center sm:text-left" style={{ textShadow: '1px 1px 2px var(--tavern-copper)' }}>
+                    Welcome, {user.displayName || user.email?.split('@')[0]}
+                  </div>
                 </div>
               </div>
+
+              {/* Logout Button */}
               <button
                 onClick={handleLogout}
-                className="beer-button px-4 py-2 rounded-md transition-colors"
+                className="beer-button px-6 sm:px-4 py-3 sm:py-2 rounded-md transition-colors text-base sm:text-base order-1 sm:order-2 w-48 sm:w-auto"
               >
-                Leave the Tavern
+                <span className="hidden sm:inline">Leave the Tavern</span>
+                <span className="sm:hidden">Leave the Tavern</span>
               </button>
             </div>
           </div>
