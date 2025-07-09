@@ -1,222 +1,183 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
-  --beer-amber: #FF8C00;
-  --beer-gold: #FFD700;
-  --beer-dark: #8B4513;
-  --beer-cream: #FFF8DC;
-  --beer-brown: #A0522D;
-  --beer-light: #F5DEB3;
-  --beer-accent: #FF6B35;
-  --beer-shadow: rgba(139, 69, 19, 0.1);
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  min-height: 100vh;
-}
-
-body {
-  color: #ffffff;
-  background-attachment: fixed;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--beer-amber);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--beer-accent);
-}
-
-/* Glass morphism effect */
-.glass {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-}
-
-/* Beer gradient backgrounds */
-.beer-gradient {
-  background: linear-gradient(135deg, var(--beer-amber) 0%, var(--beer-gold) 50%, var(--beer-accent) 100%);
-}
-
-.beer-gradient-dark {
-  background: linear-gradient(135deg, var(--beer-dark) 0%, var(--beer-brown) 50%, #654321 100%);
-}
-
-/* Animated backgrounds */
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.animated-gradient {
-  background: linear-gradient(-45deg, var(--beer-amber), var(--beer-gold), var(--beer-accent), var(--beer-dark));
-  background-size: 400% 400%;
-  animation: gradient-shift 15s ease infinite;
-}
-
-/* Hover effects */
-.hover-lift {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-/* Glow effects */
-.glow {
-  box-shadow: 0 0 20px rgba(255, 140, 0, 0.3);
-}
-
-.glow:hover {
-  box-shadow: 0 0 30px rgba(255, 140, 0, 0.5);
-}
-
-/* Custom button styles */
-.btn-primary {
-  background: linear-gradient(135deg, var(--beer-amber) 0%, var(--beer-accent) 100%);
-  border: none;
-  color: white;
-  font-weight: 600;
-  padding: 12px 24px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 140, 0, 0.4);
-}
-
-.btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  font-weight: 500;
-  padding: 12px 24px;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-}
-
-/* Card styles */
-.card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 24px;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
-}
-
-/* Input styles */
-.input-modern {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  padding: 16px;
-  color: white;
-  font-size: 16px;
-  transition: all 0.3s ease;
-}
-
-.input-modern:focus {
-  outline: none;
-  border-color: var(--beer-amber);
-  box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.2);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.input-modern::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  /* Simplified tavern color palette */
+  --tavern-dark: #2C1810;      /* Deep mahogany brown */
+  --tavern-gold: #D4AF37;       /* Aged gold */
+  --tavern-cream: #F5E6D3;      /* Parchment cream */
+  --tavern-copper: #CD7F32;     /* Aged copper */
+  
+  /* Font families */
+  --font-heading: var(--font-abril);
+  --font-body: var(--font-inter);
 }
 
 /* Typography */
-.heading-primary {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--beer-gold) 0%, var(--beer-amber) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.heading-font {
+  font-family: var(--font-heading);
+  letter-spacing: 0.01em;
 }
 
-.heading-secondary {
-  font-family: 'Poppins', sans-serif;
+.body-font {
+  font-family: var(--font-body);
+}
+
+/* Custom glassmorphism effect for tavern */
+.tavern-glass {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(44, 24, 16, 0.3));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 8px 32px rgba(26, 15, 10, 0.3);
+}
+
+/* Custom button styles */
+.beer-button {
+  background: linear-gradient(135deg, var(--tavern-gold), var(--tavern-copper));
+  color: var(--tavern-dark);
   font-weight: 600;
-  color: var(--beer-gold);
+  border: 2px solid var(--tavern-copper);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
-/* Beer icon animations */
-@keyframes beer-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+.beer-button:hover {
+  background: linear-gradient(135deg, var(--tavern-copper), var(--tavern-dark));
+  color: var(--tavern-cream);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 15, 10, 0.4);
 }
 
-.beer-icon {
-  animation: beer-bounce 2s ease-in-out infinite;
+.beer-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* Success/error states */
-.success-glow {
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+/* Input field styles */
+.beer-input {
+  background: var(--tavern-cream);
+  border: 2px solid var(--tavern-copper);
+  transition: all 0.3s ease;
+  color: var(--tavern-dark);
 }
 
-.error-glow {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+.beer-input::placeholder {
+  color: var(--tavern-dark);
+  opacity: 0.6;
 }
 
-/* Loading animations */
-@keyframes pulse-glow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+.beer-input:focus {
+  border-color: var(--tavern-gold);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
 }
 
-.loading-pulse {
-  animation: pulse-glow 1.5s ease-in-out infinite;
+/* Google button style */
+.google-button, .info-container {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--tavern-gold), var(--tavern-copper));
+  color: var(--tavern-dark);
+  border: 2px solid var(--tavern-copper);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+
+.google-button:hover {
+  background: linear-gradient(135deg, var(--tavern-copper), var(--tavern-dark));
+  color: var(--tavern-cream);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 15, 10, 0.4);
+}
+
+.google-button:active {
+  transform: translateY(0);
+}
+
+/* Auth button styles */
+.auth-button {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--tavern-gold), var(--tavern-copper));
+  color: var(--tavern-dark);
+  border: 2px solid var(--tavern-copper);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.auth-button:hover {
+  background: linear-gradient(135deg, var(--tavern-copper), var(--tavern-dark));
+  color: var(--tavern-cream);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 15, 10, 0.4);
+}
+
+/* Enhanced bubble animation */
+.bubble-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.bubble {
+  position: absolute;
+  background: radial-gradient(circle at 50% 50%, 
+    rgba(212, 175, 55, 0.8) 0%,
+    rgba(212, 175, 55, 0.3) 50%,
+    transparent 100%);
+  border-radius: 50%;
+  animation: float 4s ease-in infinite;
+  bottom: 50%;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-25vh) scale(1.1);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-50vh) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Tavern background pattern */
+.tavern-bg {
+  background: 
+    linear-gradient(135deg, var(--tavern-dark) 0%, var(--tavern-copper) 50%, var(--tavern-dark) 100%),
+    radial-gradient(circle at 20% 80%, var(--tavern-gold) 0%, transparent 50%);
+  background-blend-mode: overlay;
+}
+
+/* Wood texture effect */
+.wood-texture {
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(212, 175, 55, 0.1) 2px,
+      rgba(212, 175, 55, 0.1) 4px
+    );
 }

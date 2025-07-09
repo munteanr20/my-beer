@@ -1,19 +1,30 @@
 'use client';
 
 import { useState } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import { useBeers } from '../hooks/useBeers';
 
-export default function AddBeerForm() {
+interface AddBeerFormProps {
+  userId: string;
+  onBeerAdded: () => void;
+}
+
+export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
   const [name, setName] = useState('');
-  const [type, setType] = useState('Blonde');
+  const [type, setType] = useState('');
   const [quantity, setQuantity] = useState('');
   const [alcohol, setAlcohol] = useState('');
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-  const { user } = useAuth();
+  const [success, setSuccess] = useState(false);
+  
+  const { addBeer } = useBeers(userId);
 
-  const beerTypes = ['Blonde', 'Dark', 'IPA', 'Craft'];
+  const beerTypes = [
+    'Blonde',
+    'Dark', 
+    'IPA',
+    'Craft'
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,98 +33,72 @@ export default function AddBeerForm() {
     setLoading(true);
 
     if (!name.trim()) {
-      setError('Beer name is required');
+      setError('Beer name is required.');
       setLoading(false);
       return;
     }
 
-    if (!quantity.trim()) {
-      setError('Quantity is required');
+    if (!type) {
+      setError('Please select the beer type.');
       setLoading(false);
       return;
     }
 
-    const quantityNum = parseFloat(quantity);
-    if (isNaN(quantityNum) || quantityNum <= 0) {
-      setError('Please enter a valid quantity');
-      setLoading(false);
-      return;
-    }
+    const result = await addBeer({
+      name: name.trim(),
+      type: type,
+      quantity: quantity.trim() || undefined,
+      alcohol: alcohol.trim() || undefined
+    });
 
-    const alcoholNum = alcohol ? parseFloat(alcohol) : 0;
-    if (alcohol && (isNaN(alcoholNum) || alcoholNum < 0 || alcoholNum > 100)) {
-      setError('Please enter a valid alcohol percentage (0-100)');
-      setLoading(false);
-      return;
-    }
-
-    try {
-      // Add beer functionality removed - UI/UX focus only
-      console.log('Add beer:', {
-        name: name.trim(),
-        type,
-        quantity: quantityNum,
-        alcohol: alcoholNum,
-        userId: user!.uid,
-        createdAt: new Date(),
-      });
-
-      // Reset form
+    if (result.success) {
+      setSuccess(true);
       setName('');
-      setType('Blonde');
+      setType('');
       setQuantity('');
       setAlcohol('');
-      setSuccess(true);
-      
-      // Hide success message after 3 seconds
-      setTimeout(() => setSuccess(false), 3000);
-    } catch (err) {
-      setError('Failed to add beer. Please try again.');
+      onBeerAdded();
+    } else {
+      setError(result.error || 'Error adding beer');
     }
 
     setLoading(false);
   };
 
   return (
-    <div className="space-y-6">
-      {success && (
-        <div className="success-glow bg-green-500/10 border border-green-500/20 text-green-300 text-sm p-4 rounded-lg">
-          🍺 Beer added successfully!
-        </div>
-      )}
-
-      {error && (
-        <div className="error-glow bg-red-500/10 border border-red-500/20 text-red-300 text-sm p-4 rounded-lg">
-          {error}
-        </div>
-      )}
-
+    <div>
+      <h3 className="text-2xl font-display mb-6 text-[var(--malt-brown)]">
+        Add a new beer
+      </h3>
+      
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="beerName" className="block text-sm font-medium text-gray-200 mb-2">
-            Beer Name*
+          <label htmlFor="beerName" className="block text-base font-medium text-[var(--malt-brown)] mb-2">
+            Beer name *
           </label>
           <input
             type="text"
             id="beerName"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="input-modern w-full"
-            placeholder="Ex: Heineken, Guinness, Corona"
+            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-[var(--malt-brown)] placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"
+            placeholder="Ex: Heineken, Guinness, etc."
             required
           />
         </div>
         
         <div>
-          <label htmlFor="beerType" className="block text-sm font-medium text-gray-200 mb-2">
-            Beer Type*
+          <label htmlFor="beerType" className="block text-base font-medium text-[var(--malt-brown)] mb-2">
+            Beer type *
           </label>
           <select
             id="beerType"
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="input-modern w-full"
+            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-[var(--malt-brown)] bg-[var(--foam-light)]"
+            required
           >
+            <option value="">Select type</option>
             {beerTypes.map((beerType) => (
               <option key={beerType} value={beerType}>
                 {beerType}
@@ -123,55 +108,51 @@ export default function AddBeerForm() {
         </div>
         
         <div>
-          <label htmlFor="beerQuantity" className="block text-sm font-medium text-gray-200 mb-2">
-            Quantity* (ml)
+          <label htmlFor="beerQuantity" className="block text-base font-medium text-[var(--malt-brown)] mb-2">
+            Quantity (ml) *
           </label>
           <input
-            type="number"
+            type="text"
             id="beerQuantity"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="input-modern w-full"
+            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-[var(--malt-brown)] placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"
             placeholder="Ex: 330, 500, 1000"
-            min="1"
-            step="1"
-            required
           />
         </div>
         
         <div>
-          <label htmlFor="beerAlcohol" className="block text-sm font-medium text-gray-200 mb-2">
+          <label htmlFor="beerAlcohol" className="block text-base font-medium text-[var(--malt-brown)] mb-2">
             Alcohol %
           </label>
           <input
-            type="number"
+            type="text"
             id="beerAlcohol"
             value={alcohol}
             onChange={(e) => setAlcohol(e.target.value)}
-            className="input-modern w-full"
+            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-[var(--malt-brown)] placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"
             placeholder="Ex: 3.5, 5.5"
-            min="0"
-            max="100"
-            step="0.1"
           />
         </div>
+        
+        {error && (
+          <div className="text-red-600 text-sm bg-red-50 p-4 rounded-lg border border-red-100">
+            {error}
+          </div>
+        )}
+        
+        {success && (
+          <div className="text-green-600 text-sm bg-green-50 p-4 rounded-lg border border-green-100">
+            Beer added successfully! 🍺
+          </div>
+        )}
         
         <button
           type="submit"
           disabled={loading}
-          className="btn-primary w-full"
+          className="beer-button w-full py-3 px-4 rounded-lg text-lg disabled:opacity-50"
         >
-          {loading ? (
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-              Adding beer...
-            </div>
-          ) : (
-            <div className="flex items-center justify-center">
-              <span className="mr-2">🍺</span>
-              Add Beer
-            </div>
-          )}
+          {loading ? 'Pouring...' : 'Add beer 🍺'}
         </button>
       </form>
     </div>
