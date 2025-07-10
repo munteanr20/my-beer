@@ -76,13 +76,13 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
 
   return (
     <div>
-      <h2 className="heading-font text-2xl font-bold text-center mb-6 text-[var(--tavern-dark)]" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.3)' }}>
+        <h2 className="heading-font text-2xl font-bold text-center mb-6 text-tavern-primary" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.3)' }}>
         Join the Beer Club!
       </h2>
       
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <label htmlFor="email" className="block text-sm font-semibold text-[var(--tavern-dark)] mb-2" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
+          <label htmlFor="email" className="block text-sm font-semibold text-tavern-primary mb-2" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
             Email
           </label>
           <input
@@ -90,14 +90,14 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="beer-input w-full px-4 py-2.5 rounded-lg focus:outline-none text-[var(--tavern-dark)] placeholder-[var(--tavern-dark)]/60"
+            className="beer-input w-full px-4 py-2.5 rounded-lg focus:outline-none text-tavern-primary placeholder-[var(--tavern-dark)]/60"
             placeholder="user@best-eu.org"
             required
           />
         </div>
         
         <div>
-          <label htmlFor="password" className="block text-sm font-semibold text-[var(--tavern-dark)] mb-2" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
+          <label htmlFor="password" className="block text-sm font-semibold text-tavern-primary mb-2" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
             Password
           </label>
           <div className="relative">
@@ -106,7 +106,7 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="beer-input w-full px-4 py-2.5 rounded-lg pr-10 focus:outline-none text-[var(--tavern-dark)]"
+              className="beer-input w-full px-4 py-2.5 rounded-lg pr-10 focus:outline-none text-tavern-primary"
               placeholder="At least 6 characters"
               required
             />
@@ -130,7 +130,7 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
         </div>
         
         <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-semibold text-[var(--tavern-dark)] mb-2" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
+          <label htmlFor="confirmPassword" className="block text-sm font-semibold text-tavern-primary mb-2" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
             Confirm Password
           </label>
           <div className="relative">
@@ -139,7 +139,7 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
               id="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="beer-input w-full px-4 py-2.5 rounded-lg pr-10 focus:outline-none text-[var(--tavern-dark)]"
+              className="beer-input w-full px-4 py-2.5 rounded-lg pr-10 focus:outline-none text-tavern-primary"
               required
             />
             <button
@@ -179,7 +179,7 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
       <div className="mt-8">
         <div className="relative flex items-center justify-center gap-4">
           <div className="w-full border-t border-[var(--tavern-copper)]" />
-          <span className="text-lg font-semibold px-4 text-[var(--tavern-dark)]" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
+          <span className="text-lg font-semibold px-4 text-tavern-primary" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
             Or
           </span>
           <div className="w-full border-t border-[var(--tavern-copper)]" />
@@ -203,7 +203,7 @@ export default function SignupForm({ onSwitchToLogin }: SignupFormProps) {
       <div className="mt-6 text-center">
         <button
           onClick={onSwitchToLogin}
-          className="text-[var(--tavern-dark)] text-sm font-semibold hover:text-[var(--tavern-copper)] transition-colors" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
+          className="text-tavern-primary text-sm font-semibold transition-colors" style={{ textShadow: '1px 1px 1px rgba(0,0,0,0.2)' }}>
           Already have an account? Login
         </button>
       </div>

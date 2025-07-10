@@ -9,8 +9,8 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-xl font-semibold">Pouring the perfect beer for you... 🍺</p>
+      <div className="flex items-center justify-center min-h-screen tavern-bg wood-texture">
+        <p className="text-xl font-semibold text-tavern-primary">Pouring the perfect beer for you... 🍺</p>
       </div>
     );
   }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
+import ThemeToggle from './ThemeToggle';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -21,6 +22,10 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden tavern-bg wood-texture">
+      {/* Theme Toggle Button - Top Right */}
+      <div className="absolute top-4 right-4 z-20">
+        <ThemeToggle />
+      </div>
 
       {/* Enhanced bubbles */}
       <div className="bubble-container">
@@ -42,10 +47,10 @@ export default function AuthPage() {
         <div className="max-w-md w-full space-y-8 relative z-10">
           <div className="text-center">
             <div className="text-6xl mb-6 transform hover:scale-110 transition-transform duration-300">🍺</div>
-            <h1 className="heading-font text-4xl font-bold text-[var(--tavern-gold)] mb-4" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+            <h1 className="heading-font text-4xl font-bold text-tavern-primary mb-4" style={{ textShadow: '2px 2px 4px var(--tavern-copper)' }}>
               Ghimbav's Tavern
             </h1>
-            <p className="body-font text-lg text-[var(--tavern-copper)] font-semibold" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.7)' }}>
+            <p className="body-font text-lg text-tavern-primary font-semibold" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.7)' }}>
               Welcome to the finest tavern in the realm!
             </p>
           </div>
@@ -59,7 +64,7 @@ export default function AuthPage() {
           </div>
           
           <div className="text-center text-sm">
-            <p className="info-container text-[var(--tavern-cream)] body-font tavern-glass p-4 rounded-lg font-medium" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.6)' }}>
+            <p className="text-tavern-primary body-font tavern-glass p-4 rounded-lg font-medium" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.6)' }}>
               For a better experience use @best-eu.org ID to enter.
             </p>
           </div>

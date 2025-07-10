@@ -124,7 +124,7 @@ export default function BeerStats({ userId }: BeerStatsProps) {
 
   return (
     <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
-      <h3 className="heading-font text-xl font-bold text-[var(--tavern-dark)] mb-6">
+      <h3 className="heading-font text-xl font-bold text-tavern-primary mb-6">
         Your Beer Journey Stats
       </h3>
       
@@ -202,12 +202,12 @@ export default function BeerStats({ userId }: BeerStatsProps) {
       {stats.totalBeers > 0 && (
         <div className="mt-6">
           <div className="flex justify-between items-center mb-2">
-            <p className="body-font font-bold text-[var(--tavern-copper)] text-sm">Beer Collection Progress</p>
-            <p className="body-font font-bold text-[var(--tavern-copper)] text-sm">{stats.totalBeers} beers</p>
+            <p className="body-font font-bold text-tavern-primary text-sm">Beer Collection Progress</p>
+            <p className="body-font font-bold text-tavern-primary text-sm">{stats.totalBeers} beers</p>
           </div>
           <div className="w-full bg-[var(--tavern-copper)] rounded-full h-3">
             <div 
-              className="bg-[var(--tavern-gold)] h-3 rounded-full transition-all duration-300"
+              className="bg-[var(--tavern-dark)] h-3 rounded-full transition-all duration-300"
               style={{ width: `${Math.min(100, (stats.totalBeers / 100) * 100)}%` }}
             ></div>
           </div>

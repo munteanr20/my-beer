@@ -67,13 +67,13 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
 
   return (
     <div>
-      <h3 className="text-2xl font-display mb-6 text-[var(--malt-brown)]">
+      <h3 className="text-2xl font-semibold mb-6 text-tavern-primary">
         Add a new beer
       </h3>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="beerName" className="block text-base font-medium text-[var(--malt-brown)] mb-2">
+          <label htmlFor="beerName" className="block text-base font-medium text-tavern-primary mb-2">
             Beer name *
           </label>
           <input
@@ -81,21 +81,21 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
             id="beerName"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-[var(--malt-brown)] placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"
+            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-tavern-primary placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"
             placeholder="Ex: Heineken, Guinness, etc."
             required
           />
         </div>
         
         <div>
-          <label htmlFor="beerType" className="block text-base font-medium text-[var(--malt-brown)] mb-2">
+          <label htmlFor="beerType" className="block text-base font-medium text-tavern-primary mb-2">
             Beer type *
           </label>
           <select
             id="beerType"
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-[var(--malt-brown)] bg-[var(--foam-light)]"
+            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-tavern-primary bg-[var(--foam-light)]"
             required
           >
             <option value="">Select type</option>
@@ -108,7 +108,7 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
         </div>
         
         <div>
-          <label htmlFor="beerQuantity" className="block text-base font-medium text-[var(--malt-brown)] mb-2">
+          <label htmlFor="beerQuantity" className="block text-base font-medium text-tavern-primary mb-2">
             Quantity (ml) *
           </label>
           <input
@@ -116,13 +116,13 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
             id="beerQuantity"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-[var(--malt-brown)] placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"
+            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-tavern-primary placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"
             placeholder="Ex: 330, 500, 1000"
           />
         </div>
         
         <div>
-          <label htmlFor="beerAlcohol" className="block text-base font-medium text-[var(--malt-brown)] mb-2">
+          <label htmlFor="beerAlcohol" className="block text-base font-medium text-tavern-primary mb-2">
             Alcohol %
           </label>
           <input
@@ -130,8 +130,7 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
             id="beerAlcohol"
             value={alcohol}
             onChange={(e) => setAlcohol(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-[var(--malt-brown)] placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"
-            placeholder="Ex: 3.5, 5.5"
+            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-tavern-primary placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"            placeholder="Ex: 3.5, 5.5"
           />
         </div>
         

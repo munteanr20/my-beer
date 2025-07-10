@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Simplified tavern color palette */
+  /* Dark theme (default) - Tavern at night */
   --tavern-dark: #2C1810;      /* Deep mahogany brown */
   --tavern-gold: #D4AF37;       /* Aged gold */
   --tavern-cream: #F5E6D3;      /* Parchment cream */
@@ -10,6 +10,14 @@
   /* Font families */
   --font-heading: var(--font-abril);
   --font-body: var(--font-inter);
+}
+
+[data-theme="light"] {
+  /* Light theme - Tavern in daylight */
+  --tavern-dark: #2C1810;      /* Deep mahogany brown */
+  --tavern-gold: #D4AF37;       /* Aged gold */
+  --tavern-cream: #F5E6D3;      /* Parchment cream */
+  --tavern-copper: #CD7F32;     /* Sienna */
 }
 
 /* Typography */
@@ -22,12 +30,43 @@
   font-family: var(--font-body);
 }
 
+/* Text color classes that adapt to themes */
+.text-tavern-primary {
+  color: var(--tavern-cream);
+}
+
+[data-theme="light"] .text-tavern-primary {
+  color: var(--tavern-dark);
+}
+
+.text-tavern-secondary {
+  color: var(--tavern-gold);
+}
+
+[data-theme="light"] .text-tavern-secondary {
+  color: var(--tavern-gold);
+}
+
+.text-tavern-accent {
+  color: var(--tavern-copper);
+}
+
+[data-theme="light"] .text-tavern-accent {
+  color: var(--tavern-copper);
+}
+
 /* Custom glassmorphism effect for tavern */
 .tavern-glass {
   background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(44, 24, 16, 0.3));
   backdrop-filter: blur(10px);
   border: 1px solid rgba(212, 175, 55, 0.2);
   box-shadow: 0 8px 32px rgba(26, 15, 10, 0.3);
+}
+
+[data-theme="light"] .tavern-glass {
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(255, 248, 220, 0.3));
+  border: 1px solid rgba(184, 134, 11, 0.2);
+  box-shadow: 0 8px 32px rgba(139, 69, 19, 0.2);
 }
 
 /* Custom button styles */
@@ -41,11 +80,20 @@
   text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
+[data-theme="light"] .beer-button {
+  color: var(--tavern-cream);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
 .beer-button:hover {
   background: linear-gradient(135deg, var(--tavern-copper), var(--tavern-dark));
   color: var(--tavern-cream);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(26, 15, 10, 0.4);
+}
+
+[data-theme="light"] .beer-button:hover {
+  color: var(--tavern-cream);
 }
 
 .beer-button:disabled {
@@ -61,9 +109,18 @@
   color: var(--tavern-dark);
 }
 
+[data-theme="light"] .beer-input {
+  background: var(--tavern-cream);
+  color: var(--tavern-dark);
+}
+
 .beer-input::placeholder {
   color: var(--tavern-dark);
   opacity: 0.6;
+}
+
+[data-theme="light"] .beer-input::placeholder {
+  color: var(--tavern-dark);
 }
 
 .beer-input:focus {
@@ -71,14 +128,18 @@
   box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
 }
 
+[data-theme="light"] .beer-input:focus {
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2);
+}
+
 /* Google button style */
-.google-button, .info-container {
+.google-button{
   width: 100%;
   padding: 0.75rem;
   border-radius: 0.5rem;
   font-weight: 600;
   background: linear-gradient(135deg, var(--tavern-gold), var(--tavern-copper));
-  color: var(--tavern-dark);
+  color: var(--tavern-primary);
   border: 2px solid var(--tavern-copper);
   cursor: pointer;
   display: flex;
@@ -89,12 +150,21 @@
   text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
+[data-theme="light"] .google-button,
+[data-theme="light"] .info-container {
+  color: var(--tavern-cream);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
 
 .google-button:hover {
   background: linear-gradient(135deg, var(--tavern-copper), var(--tavern-dark));
   color: var(--tavern-cream);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(26, 15, 10, 0.4);
+}
+
+[data-theme="light"] .google-button:hover {
+  color: var(--tavern-cream);
 }
 
 .google-button:active {
@@ -115,11 +185,20 @@
   text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
+[data-theme="light"] .auth-button {
+  color: var(--tavern-cream);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
 .auth-button:hover {
   background: linear-gradient(135deg, var(--tavern-copper), var(--tavern-dark));
   color: var(--tavern-cream);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(26, 15, 10, 0.4);
+}
+
+[data-theme="light"] .auth-button:hover {
+  color: var(--tavern-cream);
 }
 
 /* Enhanced bubble animation */
@@ -144,6 +223,13 @@
   bottom: 50%;
 }
 
+[data-theme="light"] .bubble {
+  background: radial-gradient(circle at 50% 50%, 
+    rgba(184, 134, 11, 0.8) 0%,
+    rgba(184, 134, 11, 0.3) 50%,
+    transparent 100%);
+}
+
 @keyframes float {
   0% {
     transform: translateY(0) scale(1);
@@ -162,22 +248,106 @@
   }
 }
 
-/* Tavern background pattern */
+/* Tavern background pattern - DARK MODE */
 .tavern-bg {
-  background: 
-    linear-gradient(135deg, var(--tavern-dark) 0%, var(--tavern-copper) 50%, var(--tavern-dark) 100%),
-    radial-gradient(circle at 20% 80%, var(--tavern-gold) 0%, transparent 50%);
-  background-blend-mode: overlay;
-}
-
-/* Wood texture effect */
-.wood-texture {
+  background: var(--tavern-dark);
   background-image: 
+    radial-gradient(circle at 25% 25%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(205, 127, 50, 0.1) 0%, transparent 50%),
     repeating-linear-gradient(
       45deg,
       transparent,
       transparent 2px,
-      rgba(212, 175, 55, 0.1) 2px,
-      rgba(212, 175, 55, 0.1) 4px
+      rgba(212, 175, 55, 0.05) 2px,
+      rgba(212, 175, 55, 0.05) 4px
     );
+}
+
+/* Tavern background pattern - LIGHT MODE */
+[data-theme="light"] .tavern-bg {
+  background: var(--tavern-cream);
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(184, 134, 11, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(160, 82, 45, 0.1) 0%, transparent 50%),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(184, 134, 11, 0.05) 2px,
+      rgba(184, 134, 11, 0.05) 4px
+    );
+}
+
+/* Barrel texture effect */
+.wood-texture {
+  background-image: 
+    /* Simple barrel hoops */
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 80px,
+      rgba(212, 175, 55, 0.3) 80px,
+      rgba(212, 175, 55, 0.3) 85px,
+      transparent 85px,
+      transparent 160px
+    ),
+    /* Simple vertical staves */
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 30px,
+      rgba(205, 127, 50, 0.2) 30px,
+      rgba(205, 127, 50, 0.2) 35px,
+      transparent 35px,
+      transparent 60px
+    );
+}
+
+[data-theme="light"] .wood-texture {
+  background-image: 
+    /* Simple barrel hoops */
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 80px,
+      rgba(184, 134, 11, 0.3) 80px,
+      rgba(184, 134, 11, 0.3) 85px,
+      transparent 85px,
+      transparent 160px
+    ),
+    /* Simple vertical staves */
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 30px,
+      rgba(160, 82, 45, 0.2) 30px,
+      rgba(160, 82, 45, 0.2) 35px,
+      transparent 35px,
+      transparent 60px
+    );
+}
+
+/* Theme toggle button styles */
+.theme-toggle {
+  background: linear-gradient(135deg, var(--tavern-gold), var(--tavern-copper));
+  border: 2px solid var(--tavern-copper);
+  color: var(--tavern-dark);
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+[data-theme="light"] .theme-toggle {
+  color: var(--tavern-cream);
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.theme-toggle:hover {
+  background: linear-gradient(135deg, var(--tavern-copper), var(--tavern-dark));
+  color: var(--tavern-cream);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(26, 15, 10, 0.4);
+}
+
+[data-theme="light"] .theme-toggle:hover {
+  color: var(--tavern-cream);
 }

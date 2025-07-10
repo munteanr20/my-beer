@@ -25,11 +25,11 @@ export default function BeerList({ userId }: BeerListProps) {
     return (
       <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
         <div className="text-center">
-          <div className="text-6xl mb-4 transform hover:scale-110 transition-transform duration-300">🍺</div>
-          <h3 className="heading-font text-xl font-bold text-[var(--tavern-gold)] mb-3" style={{ textShadow: '1px 1px 2px var(--tavern-copper)' }}>
-            Empty Tankard
+          <div className="text-5xl mb-4 transform hover:scale-110 transition-transform duration-300">🍺</div>
+          <h3 className="heading-font text-xl font-bold text-tavern-primary mb-3">
+            Empty Tank
           </h3>
-          <p className="body-font text-[var(--tavern-cream)] text-sm">
+          <p className="body-font text-tavern-primary text-sm">
             Your beer journey awaits! Add your first brew to start your legendary collection.
           </p>
         </div>
@@ -78,10 +78,10 @@ export default function BeerList({ userId }: BeerListProps) {
     <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h3 className="text-2xl font-display mb-6 text-[var(--tavern-dark)]">
+            <h3 className="text-2xl font-display mb-6 text-tavern-primary">
             Your Beer Collection
           </h3>
-          <p className="body-font font-bold text-[var(--tavern-dark)] text-md">
+          <p className="body-font font-bold text-tavern-primary text-md">
             {totalBeers} {totalBeers === 1 ? 'beer' : 'beers'} in your tavern
           </p>
         </div>
