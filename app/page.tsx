@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from './hooks/useAuth';
-import AuthPage from './components/AuthPage';
+import AuthPage from './components/auth/AuthPage';
 import Dashboard from './components/Dashboard';
 
 export default function Home() {

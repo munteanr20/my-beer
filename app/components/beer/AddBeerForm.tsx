@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useBeers } from '../hooks/useBeers';
+import { useBeers } from '../../hooks/useBeers';
+import { BEER_TYPES } from '../../constants';
+import { AddBeerFormData } from '../../types';
 
 interface AddBeerFormProps {
   userId: string;
@@ -19,12 +21,7 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
   
   const { addBeer } = useBeers(userId);
 
-  const beerTypes = [
-    'Blonde',
-    'Dark', 
-    'IPA',
-    'Craft'
-  ];
+  const beerTypes = BEER_TYPES;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,12 +41,14 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
       return;
     }
 
-    const result = await addBeer({
+    const beerData: AddBeerFormData = {
       name: name.trim(),
       type: type,
       quantity: quantity.trim() || undefined,
       alcohol: alcohol.trim() || undefined
-    });
+    };
+
+    const result = await addBeer(beerData);
 
     if (result.success) {
       setSuccess(true);
@@ -81,7 +80,7 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
             id="beerName"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-tavern-primary placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"
+            className="beer-input w-full px-4 py-3 rounded-lg focus:outline-none"
             placeholder="Ex: Heineken, Guinness, etc."
             required
           />
@@ -95,7 +94,7 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
             id="beerType"
             value={type}
             onChange={(e) => setType(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-tavern-primary bg-[var(--foam-light)]"
+            className="beer-input w-full px-4 py-3 rounded-lg focus:outline-none"
             required
           >
             <option value="">Select type</option>
@@ -112,12 +111,13 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
             Quantity (ml) *
           </label>
           <input
-            type="text"
+            type="number"
             id="beerQuantity"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-tavern-primary placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"
+            className="beer-input w-full px-4 py-3 rounded-lg focus:outline-none"
             placeholder="Ex: 330, 500, 1000"
+            required
           />
         </div>
         
@@ -126,22 +126,24 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
             Alcohol %
           </label>
           <input
-            type="text"
+            type="number"
             id="beerAlcohol"
             value={alcohol}
             onChange={(e) => setAlcohol(e.target.value)}
-            className="w-full px-4 py-3 border-2 border-[var(--golden-light)] rounded-lg focus:outline-none focus:border-[var(--golden-dark)] text-tavern-primary placeholder-[var(--malt-brown)]/50 bg-[var(--foam-light)]"            placeholder="Ex: 3.5, 5.5"
+            className="beer-input w-full px-4 py-3 rounded-lg focus:outline-none"
+            placeholder="Ex: 3.5, 5.5"
+            required
           />
         </div>
         
         {error && (
-          <div className="text-red-600 text-sm bg-red-50 p-4 rounded-lg border border-red-100">
+          <div className="message-error text-sm p-4 rounded-lg">
             {error}
           </div>
         )}
         
         {success && (
-          <div className="text-green-600 text-sm bg-green-50 p-4 rounded-lg border border-green-100">
+          <div className="message-success text-sm p-4 rounded-lg">
             Beer added successfully! 🍺
           </div>
         )}

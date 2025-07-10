@@ -59,13 +59,11 @@
 .tavern-glass {
   background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(44, 24, 16, 0.3));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(212, 175, 55, 0.2);
   box-shadow: 0 8px 32px rgba(26, 15, 10, 0.3);
 }
 
 [data-theme="light"] .tavern-glass {
   background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(255, 248, 220, 0.3));
-  border: 1px solid rgba(184, 134, 11, 0.2);
   box-shadow: 0 8px 32px rgba(139, 69, 19, 0.2);
 }
 
@@ -103,20 +101,20 @@
 
 /* Input field styles */
 .beer-input {
-  background: var(--tavern-cream);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(44, 24, 16, 0.3));
+  backdrop-filter: blur(10px);
   border: 2px solid var(--tavern-copper);
   transition: all 0.3s ease;
-  color: var(--tavern-dark);
+  color: var(--tavern-cream);
 }
 
 [data-theme="light"] .beer-input {
-  background: var(--tavern-cream);
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(255, 248, 220, 0.3));
   color: var(--tavern-dark);
 }
 
 .beer-input::placeholder {
-  color: var(--tavern-dark);
-  opacity: 0.6;
+  color: var(--tavern-cream);
 }
 
 [data-theme="light"] .beer-input::placeholder {
@@ -125,11 +123,13 @@
 
 .beer-input:focus {
   border-color: var(--tavern-gold);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(44, 24, 16, 0.4));
 }
 
 [data-theme="light"] .beer-input:focus {
-  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.2);
+  box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.3);
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.2), rgba(255, 248, 220, 0.4));
 }
 
 /* Google button style */
@@ -350,4 +350,31 @@
 
 [data-theme="light"] .theme-toggle:hover {
   color: var(--tavern-cream);
+}
+
+/* Message styles */
+.message-error {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(153, 27, 27, 0.3));
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #dc2626;
+  backdrop-filter: blur(10px);
+}
+
+[data-theme="light"] .message-error {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(254, 226, 226, 0.3));
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #dc2626;
+}
+
+.message-success {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(21, 128, 61, 0.3));
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #16a34a;
+  backdrop-filter: blur(10px);
+}
+
+[data-theme="light"] .message-success {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(240, 253, 244, 0.3));
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #16a34a;
 }

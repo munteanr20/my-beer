@@ -1,7 +1,7 @@
 'use client';
 
-import { useBeers } from '../hooks/useBeers';
-import { Beer } from '../hooks/useBeers';
+import { useBeers } from '../../hooks/useBeers';
+import { Beer } from '../../types';
 
 interface BeerListProps {
   userId: string;
@@ -66,11 +66,11 @@ export default function BeerList({ userId }: BeerListProps) {
 
   const getTypeColor = (type: string) => {
     switch (type.toLowerCase()) {
-      case 'blonde': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'dark': return 'bg-amber-100 text-amber-800 border-amber-200';
-      case 'ipa': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'craft': return 'bg-purple-100 text-purple-800 border-purple-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'blonde': return 'bg-[var(--tavern-gold)] text-tavern-dark border-[var(--tavern-copper)]';
+      case 'dark': return 'bg-[var(--tavern-dark)] text-[var(--tavern-cream)] border-[var(--tavern-copper)]';
+      case 'ipa': return 'bg-[var(--tavern-gold)] text-[var(--tavern-dark)] border-[var(--tavern-copper)]';
+      case 'craft': return 'bg-[var(--tavern-gold)] text-[var(--tavern-dark)] border-[var(--tavern-copper)]';
+      default: return 'bg-[var(--tavern-gold)] text-[var(--tavern-cream)] border-[var(--tavern-copper)]';
     }
   };
 
@@ -91,7 +91,7 @@ export default function BeerList({ userId }: BeerListProps) {
         {beers.map((beer, index) => (
           <div
             key={beer.id}
-            className="bg-[var(--tavern-dark)] rounded-lg p-4 border border-[var(--tavern-copper)] hover:border-[var(--tavern-gold)] transition-all duration-300 hover:shadow-lg"
+            className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2"
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start space-x-3 flex-1">
@@ -101,7 +101,7 @@ export default function BeerList({ userId }: BeerListProps) {
                 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-2 mb-2">
-                    <h4 className="heading-font font-bold text-[var(--tavern-gold)] text-lg truncate">
+                    <h4 className="heading-font font-bold text-tavern-primary text-lg truncate">
                       {beer.name}
                     </h4>
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${getTypeColor(beer.type)}`}>
@@ -113,13 +113,13 @@ export default function BeerList({ userId }: BeerListProps) {
                     {beer.quantity && (
                       <div className="flex items-center space-x-1">
                         <span className="text-[var(--tavern-copper)]">🥃</span>
-                        <span className="body-font text-[var(--tavern-cream)]">{beer.quantity}ml</span>
+                        <span className="body-font text-tavern-primary">{beer.quantity}ml</span>
                       </div>
                     )}
                     {beer.alcohol && (
                       <div className="flex items-center space-x-1">
                         <span className="text-[var(--tavern-copper)]">⚡</span>
-                        <span className="body-font text-[var(--tavern-cream)]">{beer.alcohol}%</span>
+                        <span className="body-font text-tavern-primary">{beer.alcohol}%</span>
                       </div>
                     )}
                   </div>
@@ -130,7 +130,7 @@ export default function BeerList({ userId }: BeerListProps) {
                 <div className="body-font text-[var(--tavern-copper)] text-xs font-medium">
                   {formatDate(beer.createdAt)}
                 </div>
-                <div className="text-xs text-[var(--tavern-cream)] opacity-70">
+                <div className="text-xs text-tavern-primary opacity-70">
                   #{index + 1}
                 </div>
               </div>

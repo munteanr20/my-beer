@@ -2,10 +2,10 @@
 
 import { useAuth } from '../hooks/useAuth';
 import { getCurrentYear } from '../lib/utils';
-import AddBeerForm from './AddBeerForm';
-import BeerList from './BeerList';
-import BeerStats from './BeerStats';
-import ThemeToggle from './ThemeToggle';
+import AddBeerForm from './beer/AddBeerForm';
+import BeerList from './beer/BeerList';
+import BeerStats from './beer/BeerStats';
+import ThemeToggle from './ui/ThemeToggle';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();

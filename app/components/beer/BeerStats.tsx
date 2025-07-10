@@ -1,6 +1,7 @@
 'use client';
 
-import { useBeers, Beer } from '../hooks/useBeers';
+import { useBeers } from '../../hooks/useBeers';
+import { Beer, BeerStats as BeerStatsType } from '../../types';
 
 interface BeerStatsProps {
   userId: string;
@@ -34,29 +35,47 @@ export default function BeerStats({ userId }: BeerStatsProps) {
       };
     }
 
-    // Calculate total liters (convert from ml to liters)
+    // Calculate total liters (convert from ml to liters) - More accurate parsing
     const totalLiters = beers.reduce((total, beer) => {
       if (beer.quantity) {
-        const quantity = parseFloat(beer.quantity.replace(/[^\d.]/g, ''));
+        // Remove all non-numeric characters except decimal points
+        const cleanQuantity = beer.quantity.replace(/[^\d.]/g, '');
+        const quantity = parseFloat(cleanQuantity);
         return total + (isNaN(quantity) ? 0 : quantity / 1000); // Convert ml to liters
       }
       return total;
     }, 0);
 
-    // Calculate alcohol statistics
+    // Calculate alcohol statistics - More accurate parsing
     const alcoholValues = beers
-      .map(beer => beer.alcohol ? parseFloat(beer.alcohol.replace(/[^\d.]/g, '')) : 0)
-      .filter(alcohol => !isNaN(alcohol));
+      .map(beer => {
+        if (!beer.alcohol) return 0;
+        // Remove all non-numeric characters except decimal points
+        const cleanAlcohol = beer.alcohol.replace(/[^\d.]/g, '');
+        return parseFloat(cleanAlcohol);
+      })
+      .filter(alcohol => !isNaN(alcohol) && alcohol > 0);
 
     const averageAlcohol = alcoholValues.length > 0 
       ? alcoholValues.reduce((sum, alcohol) => sum + alcohol, 0) / alcoholValues.length 
       : 0;
 
+    // Calculate total alcohol more accurately
     const totalAlcohol = beers.reduce((total, beer) => {
       if (beer.alcohol && beer.quantity) {
-        const alcohol = parseFloat(beer.alcohol.replace(/[^\d.]/g, ''));
-        const quantity = parseFloat(beer.quantity.replace(/[^\d.]/g, ''));
-        return total + (isNaN(alcohol) || isNaN(quantity) ? 0 : (alcohol * quantity / 100));
+        // Clean and parse alcohol percentage
+        const cleanAlcohol = beer.alcohol.replace(/[^\d.]/g, '');
+        const alcohol = parseFloat(cleanAlcohol);
+        
+        // Clean and parse quantity in ml
+        const cleanQuantity = beer.quantity.replace(/[^\d.]/g, '');
+        const quantity = parseFloat(cleanQuantity);
+        
+        // Calculate pure alcohol in liters: (alcohol_percentage / 100) * quantity_ml / 1000
+        // Example: 5% alcohol in 330ml = (5/100) * 330 / 1000 = 0.0165 liters pure alcohol
+        if (!isNaN(alcohol) && !isNaN(quantity) && alcohol > 0 && quantity > 0) {
+          return total + (alcohol / 100) * (quantity / 1000);
+        }
       }
       return total;
     }, 0);
@@ -86,16 +105,19 @@ export default function BeerStats({ userId }: BeerStatsProps) {
       return beerDate >= oneMonthAgo;
     }).length;
 
-    // Calculate average beers per week (based on first beer date)
-    const firstBeerDate = beers
+    // Calculate average beers per week with more accurate time calculation
+    const beerDates = beers
       .map(beer => beer.createdAt?.toDate ? beer.createdAt.toDate() : new Date(beer.createdAt))
-      .sort((a, b) => a.getTime() - b.getTime())[0];
+      .sort((a, b) => a.getTime() - b.getTime());
 
-    const weeksSinceFirst = firstBeerDate 
-      ? Math.max(1, Math.ceil((now.getTime() - firstBeerDate.getTime()) / (7 * 24 * 60 * 60 * 1000)))
-      : 1;
-
-    const averageBeersPerWeek = beers.length / weeksSinceFirst;
+    const firstBeerDate = beerDates[0];
+    const lastBeerDate = beerDates[beerDates.length - 1];
+    
+    // Calculate time span more accurately
+    const timeSpanMs = lastBeerDate.getTime() - firstBeerDate.getTime();
+    const timeSpanWeeks = Math.max(1, timeSpanMs / (7 * 24 * 60 * 60 * 1000));
+    
+    const averageBeersPerWeek = beers.length / timeSpanWeeks;
 
     return {
       totalBeers: beers.length,
@@ -113,7 +135,7 @@ export default function BeerStats({ userId }: BeerStatsProps) {
 
   if (loading) {
     return (
-      <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
+      <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)] border-2">
         <div className="flex items-center justify-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--tavern-gold)]"></div>
           <span className="ml-2 body-font text-[var(--tavern-cream)]">Loading statistics...</span>
@@ -123,51 +145,51 @@ export default function BeerStats({ userId }: BeerStatsProps) {
   }
 
   return (
-    <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
+    <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)] border-2">
       <h3 className="heading-font text-xl font-bold text-tavern-primary mb-6">
         Your Beer Journey Stats
       </h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Beers */}
-        <div className="bg-[var(--tavern-dark)] rounded-lg p-4 border border-[var(--tavern-copper)]">
+        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
           <div className="flex items-center justify-between">
             <div>
-              <p className="body-font text-[var(--tavern-cream)] text-sm">Total Beers</p>
-              <p className="heading-font text-2xl font-bold text-[var(--tavern-gold)]">{stats.totalBeers}</p>
+              <p className="body-font text-tavern-primary text-sm">Total Beers</p>
+              <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalBeers}</p>
             </div>
             <div className="text-2xl">🍺</div>
           </div>
         </div>
 
         {/* Total Liters */}
-        <div className="bg-[var(--tavern-dark)] rounded-lg p-4 border border-[var(--tavern-copper)]">
+        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
           <div className="flex items-center justify-between">
             <div>
-              <p className="body-font text-[var(--tavern-cream)] text-sm">Total Liters</p>
-              <p className="heading-font text-2xl font-bold text-[var(--tavern-gold)]">{stats.totalLiters.toFixed(1)}L</p>
+              <p className="body-font text-tavern-primary text-sm">Total Liters</p>
+              <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalLiters.toFixed(1)}L</p>
             </div>
             <div className="text-2xl">🥃</div>
           </div>
         </div>
 
         {/* Average Alcohol */}
-        <div className="bg-[var(--tavern-dark)] rounded-lg p-4 border border-[var(--tavern-copper)]">
+        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
           <div className="flex items-center justify-between">
             <div>
-              <p className="body-font text-[var(--tavern-cream)] text-sm">Avg. Alcohol</p>
-              <p className="heading-font text-2xl font-bold text-[var(--tavern-gold)]">{stats.averageAlcohol.toFixed(1)}%</p>
+              <p className="body-font text-tavern-primary text-sm">Avg. Alcohol</p>
+              <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.averageAlcohol.toFixed(1)}%</p>
             </div>
             <div className="text-2xl">⚡</div>
           </div>
         </div>
 
         {/* Total Alcohol */}
-        <div className="bg-[var(--tavern-dark)] rounded-lg p-4 border border-[var(--tavern-copper)]">
+        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
           <div className="flex items-center justify-between">
             <div>
-              <p className="body-font text-[var(--tavern-cream)] text-sm">Total Alcohol</p>
-              <p className="heading-font text-2xl font-bold text-[var(--tavern-gold)]">{stats.totalAlcohol.toFixed(1)}L</p>
+              <p className="body-font text-tavern-primary text-sm">Total Alcohol</p>
+              <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalAlcohol}L</p>
             </div>
             <div className="text-2xl">🔥</div>
           </div>
@@ -176,26 +198,26 @@ export default function BeerStats({ userId }: BeerStatsProps) {
 
       {/* Additional Stats */}
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-[var(--tavern-dark)] rounded-lg p-4 border border-[var(--tavern-copper)]">
-          <p className="body-font text-[var(--tavern-cream)] text-sm">This Week</p>
-          <p className="heading-font text-xl font-bold text-[var(--tavern-gold)]">{stats.beersThisWeek} beers</p>
+        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+          <p className="body-font text-tavern-primary text-sm">This Week</p>
+          <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.beersThisWeek} beers</p>
         </div>
         
-        <div className="bg-[var(--tavern-dark)] rounded-lg p-4 border border-[var(--tavern-copper)]">
-          <p className="body-font text-[var(--tavern-cream)] text-sm">This Month</p>
-          <p className="heading-font text-xl font-bold text-[var(--tavern-gold)]">{stats.beersThisMonth} beers</p>
+        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+          <p className="body-font text-tavern-primary text-sm">This Month</p>
+          <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.beersThisMonth} beers</p>
         </div>
         
-        <div className="bg-[var(--tavern-dark)] rounded-lg p-4 border border-[var(--tavern-copper)]">
-          <p className="body-font text-[var(--tavern-cream)] text-sm">Avg. per Week</p>
-          <p className="heading-font text-xl font-bold text-[var(--tavern-gold)]">{stats.averageBeersPerWeek.toFixed(1)}</p>
+        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+          <p className="body-font text-tavern-primary text-sm">Avg. per Week</p>
+          <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.averageBeersPerWeek.toFixed(1)}</p>
         </div>
       </div>
 
       {/* Favorite Type */}
-      <div className="mt-6 bg-[var(--tavern-dark)] rounded-lg p-4 border border-[var(--tavern-copper)]">
-        <p className="body-font text-[var(--tavern-cream)] text-sm mb-2">Favorite Beer Type</p>
-        <p className="heading-font text-lg font-bold text-[var(--tavern-gold)]">{stats.favoriteType}</p>
+      <div className="mt-6 tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+        <p className="body-font text-tavern-primary text-sm mb-2">Favorite Beer Type</p>
+        <p className="heading-font text-lg font-bold text-tavern-secondary">{stats.favoriteType}</p>
       </div>
 
       {/* Progress Bar for Total Beers */}

@@ -1,24 +1,14 @@
 import { useState, useEffect } from 'react';
 import { 
-  collection, 
-  addDoc, 
+  collection,
   query, 
   where, 
   orderBy,
-  serverTimestamp,
   onSnapshot
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-
-export interface Beer {
-  id?: string;
-  name: string;
-  type: string;
-  quantity?: string;
-  alcohol?: string;
-  userId: string;
-  createdAt?: any;
-}
+import { Beer } from '../types';
+import { beerService } from '../services/beerService';
 
 export const useBeers = (userId: string) => {
   const [beers, setBeers] = useState<Beer[]>([]);
@@ -65,21 +55,35 @@ export const useBeers = (userId: string) => {
     }
   };
 
-  // Add a new beer
+  // Get beers using the service (for one-time fetching)
+  const getBeers = async () => {
+    if (!userId) return [];
+    
+    try {
+      setLoading(true);
+      const beers = await beerService.getBeers(userId);
+      setBeers(beers);
+      setTotalBeers(beers.length);
+      setLoading(false);
+      return beers;
+    } catch (error) {
+      console.error('Error getting beers:', error);
+      setLoading(false);
+      return [];
+    }
+  };
+
+  // Add a new beer using the service
   const addBeer = async (beerData: Omit<Beer, 'id' | 'userId' | 'createdAt'>) => {
     if (!userId) return { success: false, error: 'User not authenticated' };
     
     try {
-      const newBeer = {
+      const result = await beerService.addBeer({
         ...beerData,
-        userId,
-        createdAt: serverTimestamp()
-      };
+        userId
+      });
       
-      const docRef = await addDoc(collection(db, 'beers'), newBeer);
-      
-      // No need to manually refresh since we have real-time listener
-      return { success: true, id: docRef.id };
+      return result;
     } catch (error: any) {
       console.error('Error adding beer:', error);
       return { success: false, error: error.message };
@@ -108,6 +112,7 @@ export const useBeers = (userId: string) => {
     totalBeers,
     loading,
     addBeer,
-    fetchBeers
+    fetchBeers,
+    getBeers
   };
 }; 
