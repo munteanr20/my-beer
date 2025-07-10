@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useBeers } from '../../hooks/useBeers';
-import { BEER_TYPES } from '../../constants';
+import { useBeerStyles } from '../../hooks/useBeerStyles';
 import { AddBeerFormData } from '../../types';
 
 interface AddBeerFormProps {
@@ -20,8 +20,7 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
   const [success, setSuccess] = useState(false);
   
   const { addBeer } = useBeers(userId);
-
-  const beerTypes = BEER_TYPES;
+  const { beerStyleNames, loading: stylesLoading, error: stylesError } = useBeerStyles();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,12 +64,12 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
   };
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <h3 className="text-2xl font-semibold mb-6 text-tavern-primary">
         Add a new beer
       </h3>
       
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
         <div>
           <label htmlFor="beerName" className="block text-base font-medium text-tavern-primary mb-2">
             Beer name *
@@ -96,14 +95,18 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
             onChange={(e) => setType(e.target.value)}
             className="beer-input w-full px-4 py-3 rounded-lg focus:outline-none"
             required
+            disabled={stylesLoading}
           >
-            <option value="">Select type</option>
-            {beerTypes.map((beerType) => (
+            <option value="">{stylesLoading ? 'Loading types...' : 'Select type'}</option>
+            {beerStyleNames.map((beerType: string) => (
               <option key={beerType} value={beerType}>
                 {beerType}
               </option>
             ))}
           </select>
+          {stylesError && (
+            <p className="text-red-500 text-sm mt-1">{stylesError}</p>
+          )}
         </div>
         
         <div>
@@ -151,7 +154,7 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="beer-button w-full py-3 px-4 rounded-lg text-lg disabled:opacity-50"
+          className="beer-button w-full py-3 px-4 rounded-lg text-lg disabled:opacity-50 mt-auto"
         >
           {loading ? 'Pouring...' : 'Add beer 🍺'}
         </button>

@@ -1,9 +1,19 @@
+// User achievement unlock record
+export interface UserAchievement {
+  achievementId: string;
+  unlockedAt: any; // Firestore timestamp
+}
+
 // User related types
 export interface User {
   uid: string;
   email: string | null;
   displayName: string | null;
   photoURL: string | null;
+  role?: 'user' | 'admin' | 'owner' | 'moderator';
+  achievements?: UserAchievement[];
+  createdAt?: any; // Firestore timestamp
+  updatedAt?: any; // Firestore timestamp
 }
 
 // Beer related types
@@ -20,7 +30,7 @@ export interface Beer {
 // Achievement related types
 export interface Achievement {
   id: string;
-  type: 'beer_count' | 'time_based' | 'variety' | 'streak' | 'milestone';
+  type: 'beer_count' | 'time_based' | 'variety' | 'streak' | 'milestone' | 'special';
   title: string;
   description: string;
   icon: string;
@@ -32,6 +42,7 @@ export interface Achievement {
   unlocked: boolean;
   unlockedAt?: any; // Firestore timestamp
   userId: string;
+  templateId?: string; // Reference to the achievement template
 }
 
 // Statistics types
@@ -44,6 +55,22 @@ export interface BeerStats {
   beersThisMonth: number;
   beersThisWeek: number;
   averageBeersPerWeek: number;
+  
+  // Progres detaliat pentru achievement-uri
+  uniqueTypes: number;
+  highAlcoholBeers: number;
+  lowAlcoholBeers: number;
+  largeBeers: number;
+  pintSizedBeers: number;
+  totalPureAlcohol: number;
+  currentStreak: number;
+  weeklyStreak: number;
+  weekendStreak: number;
+  lateNightBeers: number;
+  detailedLogs: number;
+  ratedBeers: number;
+  megaBeers: number;
+  variedAlcoholBeers: number;
 }
 
 // Theme types
@@ -74,9 +101,10 @@ export interface BeerService {
 
 // Achievement service types
 export interface AchievementService {
-  getAchievements: (userId: string) => Promise<Achievement[]>;
-  unlockAchievement: (achievementId: string) => Promise<ApiResponse<void>>;
-  checkAchievements: (userId: string, stats: BeerStats) => Promise<Achievement[]>;
+  getAchievementDefinitions: () => Promise<any[]>;
+  getUserAchievements: (userId: string) => Promise<string[]>;
+  addAchievementToUser: (userId: string, achievementId: string) => Promise<ApiResponse<void>>;
+  checkAchievements: (userId: string, stats: BeerStats) => Promise<string[]>;
 }
 
 // Auth service types
