@@ -132,6 +132,50 @@
   background: linear-gradient(135deg, rgba(184, 134, 11, 0.2), rgba(255, 248, 220, 0.4));
 }
 
+/* Select dropdown styles for dark mode */
+.beer-input select {
+  background: linear-gradient(135deg, rgba(44, 24, 16, 0.9), rgba(44, 24, 16, 0.95));
+  color: var(--tavern-cream);
+}
+
+.beer-input option {
+  background: var(--tavern-dark);
+  color: var(--tavern-cream);
+}
+
+/* Select dropdown styles for light mode */
+[data-theme="light"] .beer-input select {
+  background: linear-gradient(135deg, rgba(255, 248, 220, 0.9), rgba(255, 248, 220, 0.95));
+  color: var(--tavern-dark);
+}
+
+[data-theme="light"] .beer-input option {
+  background: var(--tavern-cream);
+  color: var(--tavern-dark);
+}
+
+/* Dashboard grid layout with equal height containers */
+.dashboard-grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: stretch;
+  min-height: 500px;
+}
+
+.dashboard-grid-container > div {
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@media (max-width: 1024px) {
+  .dashboard-grid-container {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Google button style */
 .google-button{
   width: 100%;

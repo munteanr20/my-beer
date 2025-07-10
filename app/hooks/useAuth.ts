@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { 
-  User, 
+  User as FirebaseUser, 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
   signInWithPopup,
@@ -9,12 +9,14 @@ import {
   onAuthStateChanged
 } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import { userService } from '../services/userService';
 
 export interface AuthUser {
   uid: string;
   email: string | null;
   displayName?: string | null;
   photoURL?: string | null;
+  role?: 'user' | 'admin' | 'owner' | 'moderator';
 }
 
 export const useAuth = () => {
@@ -24,7 +26,7 @@ export const useAuth = () => {
   useEffect(() => {
     console.log('useAuth: Setting up auth state listener');
     
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log('useAuth: Auth state changed, user:', user);
       
       if (user) {
@@ -36,6 +38,29 @@ export const useAuth = () => {
         };
         console.log('useAuth: Setting authenticated user:', authUser);
         setUser(authUser);
+        
+        // Create or update user document in Firestore
+        try {
+          console.log('useAuth: Creating/updating user document in Firestore');
+          const result = await userService.createOrUpdateUser(authUser);
+          if (result.success) {
+            console.log('useAuth: User document created/updated successfully');
+            
+            // Load user data including role from Firestore
+            const userData = await userService.getUser(user.uid);
+            if (userData) {
+              const userWithRole = {
+                ...authUser,
+                role: userData.role
+              };
+              setUser(userWithRole);
+            }
+          } else {
+            console.error('useAuth: Failed to create/update user document:', result.error);
+          }
+        } catch (error) {
+          console.error('useAuth: Error creating/updating user document:', error);
+        }
       } else {
         console.log('useAuth: No user authenticated');
         setUser(null);

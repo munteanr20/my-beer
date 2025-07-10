@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [v1.1.0] - 2025-07-10
+
+### Added 
+- Achievement components (AchievementCard, AchievementList)
+- useAchievements hook for achievement management
+- Achievement integration in Dashboard
+- User role system with 'user', 'admin', 'owner', 'moderator' roles
+- Role-based achievement unlocking (Tavern Owner only for 'owner' role)
+- User role management script (scripts/manage-user-roles.js)
+- Default 'user' role assignment for new users
+- Role field in user database documents
+- Real-time achievement progress tracking with detailed statistics
+- Enhanced BeerService with comprehensive user statistics calculation
+- Progress-based achievement unlocking with accurate calculations
+- Detailed progress display for all achievement types (beers, types, alcohol, quantity, streaks)
+- Automatic achievement checking when adding new beers
+- Improved progress text display with unit-specific formatting
+
+### Fixed
+- Dropdown select elements now properly display with correct background and text colors in dark mode
+
+### Changed
+- AddBeerForm and BeerList now have consistent styling and equal height containers in the dashboard layout
+- Beer types are now loaded dynamically from the database instead of using hardcoded constants
+- Added BeerStyleService and useBeerStyles hook for managing beer styles from Firebase
+
 ## [v1.0.1] - 2025-07-10
 
 ### Added

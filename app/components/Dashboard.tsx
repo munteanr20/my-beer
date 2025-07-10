@@ -6,6 +6,7 @@ import AddBeerForm from './beer/AddBeerForm';
 import BeerList from './beer/BeerList';
 import BeerStats from './beer/BeerStats';
 import ThemeToggle from './ui/ThemeToggle';
+import AchievementList from './achievements/AchievementList';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -100,7 +101,7 @@ export default function Dashboard() {
           <BeerStats userId={user.uid} />
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="dashboard-grid-container">
           {/* Add Beer Form */}
           <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
             <AddBeerForm 
@@ -112,11 +113,16 @@ export default function Dashboard() {
           </div>
           
           {/* Beer List */}
-          <div>
+          <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
             <BeerList 
               userId={user.uid} 
             />
           </div>
+        </div>
+
+        {/* Achievements Section */}
+        <div className="mt-8">
+          <AchievementList userId={user.uid} />
         </div>
       </main>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useBeers } from '../../hooks/useBeers';
+import { useBeerStyles } from '../../hooks/useBeerStyles';
 import { Beer } from '../../types';
 
 interface BeerListProps {
@@ -9,30 +10,27 @@ interface BeerListProps {
 
 export default function BeerList({ userId }: BeerListProps) {
   const { beers, totalBeers, loading } = useBeers(userId);
+  const { beerStyles, loading: stylesLoading } = useBeerStyles();
 
   if (loading) {
     return (
-      <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
-        <div className="flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--tavern-gold)]"></div>
-          <span className="ml-2 body-font text-[var(--tavern-cream)]">Pouring your beers...</span>
-        </div>
+      <div className="flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--tavern-gold)]"></div>
+        <span className="ml-2 body-font text-[var(--tavern-cream)]">Pouring your beers...</span>
       </div>
     );
   }
 
   if (beers.length === 0) {
     return (
-      <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
-        <div className="text-center">
-          <div className="text-5xl mb-4 transform hover:scale-110 transition-transform duration-300">🍺</div>
-          <h3 className="heading-font text-xl font-bold text-tavern-primary mb-3">
-            Empty Tank
-          </h3>
-          <p className="body-font text-tavern-primary text-sm">
-            Your beer journey awaits! Add your first brew to start your legendary collection.
-          </p>
-        </div>
+      <div className="text-center">
+        <div className="text-5xl mb-4 transform hover:scale-110 transition-transform duration-300">🍺</div>
+        <h3 className="heading-font text-xl font-bold text-tavern-primary mb-3">
+          Empty Tank
+        </h3>
+        <p className="body-font text-tavern-primary text-sm">
+          Your beer journey awaits! Add your first brew to start your legendary collection.
+        </p>
       </div>
     );
   }
@@ -55,13 +53,8 @@ export default function BeerList({ userId }: BeerListProps) {
   };
 
   const getBeerEmoji = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'blonde': return '🍺';
-      case 'dark': return '🍺';
-      case 'ipa': return '🍺';
-      case 'craft': return '🍺';
-      default: return '🍺';
-    }
+    const beerStyle = beerStyles.find(style => style.name === type);
+    return beerStyle?.icon || '🍺';
   };
 
   const getTypeColor = (type: string) => {
@@ -75,10 +68,10 @@ export default function BeerList({ userId }: BeerListProps) {
   };
 
   return (
-    <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
+    <div className="flex flex-col h-full">
       <div className="flex justify-between items-center mb-6">
         <div>
-            <h3 className="text-2xl font-display mb-6 text-tavern-primary">
+            <h3 className="text-2xl font-semibold mb-6 text-tavern-primary">
             Your Beer Collection
           </h3>
           <p className="body-font font-bold text-tavern-primary text-md">
@@ -87,7 +80,7 @@ export default function BeerList({ userId }: BeerListProps) {
         </div>
       </div>
       
-      <div className="space-y-4 max-h-96 overflow-y-auto custom-scrollbar">
+      <div className="space-y-4 flex-1 overflow-y-auto custom-scrollbar">
         {beers.map((beer, index) => (
           <div
             key={beer.id}

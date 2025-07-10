@@ -9,6 +9,7 @@ import {
 import { db } from '../lib/firebase';
 import { Beer } from '../types';
 import { beerService } from '../services/beerService';
+import { achievementService } from '../services/achievementService';
 
 export const useBeers = (userId: string) => {
   const [beers, setBeers] = useState<Beer[]>([]);
@@ -82,6 +83,16 @@ export const useBeers = (userId: string) => {
         ...beerData,
         userId
       });
+      
+      // ✅ Reîncarcă achievement-urile cu progres actualizat
+      if (result.success) {
+        try {
+          const userStats = await beerService.getUserStats(userId);
+          await achievementService.checkAchievements(userId, userStats);
+        } catch (error) {
+          console.error('Error updating achievements after adding beer:', error);
+        }
+      }
       
       return result;
     } catch (error: any) {
