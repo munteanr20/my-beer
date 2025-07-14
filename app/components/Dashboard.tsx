@@ -7,6 +7,9 @@ import BeerList from './beer/BeerList';
 import BeerStats from './beer/BeerStats';
 import ThemeToggle from './ui/ThemeToggle';
 import AchievementList from './achievements/AchievementList';
+import Leaderboard from './leaderboard/Leaderboard';
+import { LeaderboardProvider } from '../contexts/LeaderboardContext';
+// import CircleLeaderboard from './leaderboard/CircleLeaderboard';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
@@ -26,7 +29,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden tavern-bg wood-texture">
+    <LeaderboardProvider>
+      <div className="min-h-screen relative overflow-hidden tavern-bg wood-texture">
       {/* Header */}
       <header className="relative z-10 bg-[var(--tavern-dark)] shadow-lg border-b border-[var(--tavern-copper)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -105,10 +109,7 @@ export default function Dashboard() {
           {/* Add Beer Form */}
           <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
             <AddBeerForm 
-              userId={user.uid} 
-              onBeerAdded={() => {
-                console.log('Beer added successfully!');
-              }}
+              userId={user.uid}
             />
           </div>
           
@@ -117,6 +118,14 @@ export default function Dashboard() {
             <BeerList 
               userId={user.uid} 
             />
+          </div>
+        </div>
+
+        {/* Leaderboard Section */}
+        <div className="mt-8">
+          <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
+            <Leaderboard />
+            {/* <CircleLeaderboard /> */}
           </div>
         </div>
 
@@ -189,6 +198,7 @@ export default function Dashboard() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </LeaderboardProvider>
   );
 } 

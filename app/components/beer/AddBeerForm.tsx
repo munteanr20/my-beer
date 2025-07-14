@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import { useBeers } from '../../hooks/useBeers';
 import { useBeerStyles } from '../../hooks/useBeerStyles';
+import { useNotification } from '../../contexts/NotificationContext';
 import { AddBeerFormData } from '../../types';
 
 interface AddBeerFormProps {
   userId: string;
-  onBeerAdded: () => void;
 }
 
-export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
+export default function AddBeerForm({ userId}: AddBeerFormProps) {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -21,6 +21,7 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
   
   const { addBeer } = useBeers(userId);
   const { beerStyleNames, loading: stylesLoading, error: stylesError } = useBeerStyles();
+  const { addNotification } = useNotification();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +56,7 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
       setType('');
       setQuantity('');
       setAlcohol('');
-      onBeerAdded();
+      addNotification('Beer added successfully! 🍺', 'success', 4000);
     } else {
       setError(result.error || 'Error adding beer');
     }
@@ -145,9 +146,19 @@ export default function AddBeerForm({ userId, onBeerAdded }: AddBeerFormProps) {
           </div>
         )}
         
+        {/* Show success message only on mobile screens */}
         {success && (
-          <div className="message-success text-sm p-4 rounded-lg">
-            Beer added successfully! 🍺
+          <div className="md:hidden message-success text-sm p-4 rounded-lg relative">
+            <div className="flex items-center justify-between">
+              <span>Beer added successfully! 🍺</span>
+              <button
+                onClick={() => setSuccess(false)}
+                className="ml-2 p-1 hover:bg-[var(--tavern-gold)] hover:bg-opacity-20 rounded-full transition-colors duration-200"
+                aria-label="Close notification"
+              >
+                <span className="text-[var(--tavern-cream)] text-lg">×</span>
+              </button>
+            </div>
           </div>
         )}
         

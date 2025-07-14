@@ -6,6 +6,59 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [v1.2.1] - 2025-07-14
+
+### Added
+- Global notification system with NotificationContext and NotificationProvider
+- NotificationToast component for displaying notifications in bottom-left corner
+- Auto-dismiss functionality for notifications (4 seconds default)
+- Responsive notification display (hidden on mobile, shown on md+ screens)
+- Close button for manual notification dismissal
+- Notification animations with slide-in effects
+- Success notifications for beer additions with tavern theme styling
+- Notification system integration in layout with proper provider setup
+
+### Changed
+- AddBeerForm now uses global notification system instead of local success state
+- Success notifications appear in corner for desktop, remain in form for mobile
+- Updated notification styling to match tavern theme with proper colors and effects
+- Enhanced user experience with non-intrusive notification placement
+
+### Fixed
+- Notifications now properly dismiss automatically after specified duration
+- Mobile users still see success messages in form for better UX
+- Notification animations work smoothly across different screen sizes
+- Proper z-index handling for notifications to appear above other content
+
+## [v1.2.0] - 2025-07-10
+
+### Added
+- Leaderboard system for all tavern patrons
+- LeaderboardService for fetching and ranking user data
+- useLeaderboard hook for leaderboard state management
+- Leaderboard component with scrollable table design
+- CircleLeaderboard component with interactive circle visualization
+- Time-based filters for leaderboard (Today, Week, Month)
+- Real-time user ranking based on beers consumed in selected time period
+- Visual rank indicators (🥇🥈🥉) for top 3 positions
+- User status badges (Legend, Regular, Novice) based on beer consumption
+- Highlighted current user row in leaderboard
+- Refresh functionality for leaderboard data
+- Leaderboard integration in Dashboard layout with dual view (table + circles)
+- Firestore security rules for leaderboard data access
+- Firestore indexes for efficient beer queries by user and date
+- Enhanced logging for leaderboard debugging
+
+### Fixed
+- Leaderboard now properly displays beers from all users, not just current user
+- Added proper Firestore security rules to allow reading all beers for leaderboard
+- Added required Firestore indexes for complex queries with userId and createdAt
+- Enhanced error handling and logging in LeaderboardService
+- Optimized leaderboard performance with single query approach
+- Time filters now work instantly without additional database queries
+- Added automatic leaderboard refresh when users add new beers
+- Improved beer collection display with scrollable list showing only 5 beers initially
+
 ## [v1.1.0] - 2025-07-10
 
 ### Added 

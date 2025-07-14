@@ -80,8 +80,8 @@ export default function BeerList({ userId }: BeerListProps) {
         </div>
       </div>
       
-      <div className="space-y-4 flex-1 overflow-y-auto custom-scrollbar">
-        {beers.map((beer, index) => (
+      <div className="space-y-4 flex-1 overflow-y-auto custom-scrollbar max-h-[420px]">
+        {beers.slice(0, 5).map((beer, index) => (
           <div
             key={beer.id}
             className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2"
@@ -130,6 +130,62 @@ export default function BeerList({ userId }: BeerListProps) {
             </div>
           </div>
         ))}
+        
+        {/* Show remaining beers if more than 5 */}
+        {beers.length > 5 && (
+          <>            
+            {/* Remaining beers */}
+            {beers.slice(5).map((beer, index) => (
+              <div
+                key={beer.id}
+                className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2 opacity-90"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start space-x-3 flex-1">
+                    <div className="text-2xl transform hover:scale-110 transition-transform duration-300">
+                      {getBeerEmoji(beer.type)}
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <h4 className="heading-font font-bold text-tavern-primary text-lg truncate">
+                          {beer.name}
+                        </h4>
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold border ${getTypeColor(beer.type)}`}>
+                          {beer.type}
+                        </span>
+                      </div>
+                      
+                      <div className="flex items-center space-x-3 text-sm">
+                        {beer.quantity && (
+                          <div className="flex items-center space-x-1">
+                            <span className="text-[var(--tavern-copper)]">🥃</span>
+                            <span className="body-font text-tavern-primary">{beer.quantity}ml</span>
+                          </div>
+                        )}
+                        {beer.alcohol && (
+                          <div className="flex items-center space-x-1">
+                            <span className="text-[var(--tavern-copper)]">⚡</span>
+                            <span className="body-font text-tavern-primary">{beer.alcohol}%</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="text-right ml-4">
+                    <div className="body-font text-[var(--tavern-copper)] text-xs font-medium">
+                      {formatDate(beer.createdAt)}
+                    </div>
+                    <div className="text-xs text-tavern-primary opacity-70">
+                      #{index + 6}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

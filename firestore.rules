@@ -1,32 +1,33 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
-    // Allow users to read and write their own beers
+  match /databases/{database}/documents {      
+    // Allow any authenticated user to read any beer (for leaderboard functionality)
+    // Allow only the owner to write/update/delete their own beer
+    // Allow only the owner to create a beer with their own userId
     match /beers/{beerId} {
-      allow read, write: if request.auth != null 
-        && request.auth.token.email.matches('.*@best-eu.org')
-        && request.auth.uid == resource.data.userId;
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
     }
     
-    // Allow users to create new beers
-    match /beers/{beerId} {
-      allow create: if request.auth != null 
-        && request.auth.token.email.matches('.*@best-eu.org')
-        && request.auth.uid == request.resource.data.userId;
-    }
-    
-    // Allow users to read and write their own profile
+    // Allow users to read and write their own user profiles
     match /users/{userId} {
-      allow read, write: if request.auth != null 
-        && request.auth.token.email.matches('.*@best-eu.org')
-        && request.auth.uid == userId;
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
     
-    // Allow users to create their own profile
-    match /users/{userId} {
-      allow create: if request.auth != null 
-        && request.auth.token.email.matches('.*@best-eu.org')
-        && request.auth.uid == userId;
+    // Allow public read/write access for achievements
+    match /achievements/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Allow public read/write access for beer styles
+    match /beerStyles/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Allow public read/write access for users (for leaderboard)
+    match /users/{document=**} {
+      allow read, write: if true;
     }
   }
 }
