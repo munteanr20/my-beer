@@ -30,7 +30,7 @@ export default function Dashboard() {
 
   return (
     <LeaderboardProvider>
-      <div className="min-h-screen relative overflow-hidden tavern-bg wood-texture">
+    <div className="min-h-screen relative overflow-hidden tavern-bg wood-texture">
       {/* Header */}
       <header className="relative z-10 bg-[var(--tavern-dark)] shadow-lg border-b border-[var(--tavern-copper)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,7 +109,7 @@ export default function Dashboard() {
           {/* Add Beer Form */}
           <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)]">
             <AddBeerForm 
-              userId={user.uid}
+              userId={user.uid} 
             />
           </div>
           
@@ -198,7 +198,7 @@ export default function Dashboard() {
           </div>
         </div>
       </footer>
-      </div>
+    </div>
     </LeaderboardProvider>
   );
 } 

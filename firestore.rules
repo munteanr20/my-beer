@@ -1,6 +1,6 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {      
+  match /databases/{database}/documents {
     // Allow any authenticated user to read any beer (for leaderboard functionality)
     // Allow only the owner to write/update/delete their own beer
     // Allow only the owner to create a beer with their own userId
