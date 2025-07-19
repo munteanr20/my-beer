@@ -72,15 +72,12 @@ export const useAchievements = (userId: string) => {
     
     try {
       setLoading(true);
-      console.log('🔍 Loading achievements for userId:', userId);
       
       // Get user's achievement IDs
       const userAchievementIds = await achievementService.getUserAchievements(userId);
-      console.log('📋 User achievement IDs:', userAchievementIds);
       
       // Get all achievement definitions
       const achievementDefinitions = await achievementService.getAchievementDefinitions();
-      console.log('📚 Achievement definitions found:', achievementDefinitions.length);
       
       // Get user's beer stats for progress calculation
       const userStats = await beerService.getUserStats(userId);
@@ -106,9 +103,6 @@ export const useAchievements = (userId: string) => {
           userId
         };
       });
-      
-      console.log('🎯 Created achievements:', allAchievements.length);
-      console.log('🔓 Unlocked achievements:', allAchievements.filter(a => a.unlocked).length);
       
       setAchievements(allAchievements);
       setUnlockedCount(allAchievements.filter(a => a.unlocked).length);

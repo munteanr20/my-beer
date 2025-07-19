@@ -6,6 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [v1.2.1] - 2025-01-27
+
+### Added
+- Multiple beer addition functionality in AddBeerForm with quantity field
+- "Add 1 more" button in BeerList for quick beer duplication
+- Horizontal scroll support for leaderboard table on mobile devices
+- Status indicators with colored dots instead of text badges in leaderboard
+- Status legend in leaderboard showing color meanings
+- Mobile-optimized leaderboard design with responsive layout
+- Mobile-optimized circle leaderboard with smaller radius and touch-friendly elements
+- Enhanced mobile responsiveness for all leaderboard components
+
+### Changed
+- Leaderboard table now uses horizontal scroll for better mobile experience
+- Status badges replaced with compact colored dots in leaderboard table
+- Beer list "Add 1 more" button now positioned below beer information on mobile
+- Leaderboard rank colors updated to use tavern theme colors (gold, copper, cream)
+- Mobile layout improvements for leaderboard headers and controls
+- Circle leaderboard radius reduced on mobile for better fit
+- Time filter buttons made full-width on mobile for better touch targets
+- Footer information layout improved for mobile devices
+
+### Fixed
+- Long user names now display properly in leaderboard with horizontal scroll
+- Status badges no longer overflow or get cut off in leaderboard table
+- Mobile touch targets improved for better accessibility
+- Leaderboard table column widths optimized for better content display
+- Circle leaderboard tooltips improved with better z-index handling
+- Mobile responsive design issues in both table and circle leaderboards
+
+### Improved
+- Mobile UX for beer addition with larger, more accessible buttons
+- Leaderboard readability on small screens with optimized layouts
+- Touch-friendly interface elements across all components
+- Visual consistency with tavern theme colors throughout the app
+- Performance optimizations for mobile devices
+
 ## [v1.2.0] - 2025-07-10
 
 ### Added

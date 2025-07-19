@@ -24,10 +24,8 @@ export const useAuth = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('useAuth: Setting up auth state listener');
     
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      console.log('useAuth: Auth state changed, user:', user);
       
       if (user) {
         const authUser = {
@@ -36,15 +34,12 @@ export const useAuth = () => {
           displayName: user.displayName,
           photoURL: user.photoURL
         };
-        console.log('useAuth: Setting authenticated user:', authUser);
         setUser(authUser);
         
         // Create or update user document in Firestore
         try {
-          console.log('useAuth: Creating/updating user document in Firestore');
           const result = await userService.createOrUpdateUser(authUser);
           if (result.success) {
-            console.log('useAuth: User document created/updated successfully');
             
             // Load user data including role from Firestore
             const userData = await userService.getUser(user.uid);
@@ -62,7 +57,6 @@ export const useAuth = () => {
           console.error('useAuth: Error creating/updating user document:', error);
         }
       } else {
-        console.log('useAuth: No user authenticated');
         setUser(null);
       }
       setLoading(false);
@@ -72,11 +66,9 @@ export const useAuth = () => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    console.log('useAuth: Attempting login with email:', email);
     
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('useAuth: Login successful:', userCredential.user);
       return { success: true, user: userCredential.user };
     } catch (error: any) {
       console.error('useAuth: Login error:', error);
@@ -85,11 +77,9 @@ export const useAuth = () => {
   };
 
   const signup = async (email: string, password: string) => {
-    console.log('useAuth: Attempting signup with email:', email);
     
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      console.log('useAuth: Signup successful:', userCredential.user);
       return { success: true, user: userCredential.user };
     } catch (error: any) {
       console.error('useAuth: Signup error:', error);
@@ -98,12 +88,10 @@ export const useAuth = () => {
   };
 
   const loginWithGoogle = async () => {
-    console.log('useAuth: Attempting Google login');
     
     try {
       const provider = new GoogleAuthProvider();
       const userCredential = await signInWithPopup(auth, provider);
-      console.log('useAuth: Google login successful:', userCredential.user);
       return { success: true, user: userCredential.user };
     } catch (error: any) {
       console.error('useAuth: Google login error:', error);
@@ -112,11 +100,9 @@ export const useAuth = () => {
   };
 
   const logout = async () => {
-    console.log('useAuth: Attempting logout');
     
     try {
       await signOut(auth);
-      console.log('useAuth: Logout successful');
       return { success: true };
     } catch (error: any) {
       console.error('useAuth: Logout error:', error);

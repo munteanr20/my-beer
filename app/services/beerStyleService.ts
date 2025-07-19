@@ -16,7 +16,6 @@ export class BeerStyleService {
   // Get all beer styles from database
   async getBeerStyles(): Promise<BeerStyle[]> {
     try {
-      console.log('🍺 Fetching beer styles from database...');
       
       const querySnapshot = await getDocs(collection(db, this.collectionName));
       const beerStyles: BeerStyle[] = [];
@@ -31,7 +30,6 @@ export class BeerStyleService {
       // Sort by name for consistent ordering
       beerStyles.sort((a, b) => a.name.localeCompare(b.name));
       
-      console.log(`✅ Found ${beerStyles.length} beer styles`);
       return beerStyles;
     } catch (error) {
       console.error('❌ Error fetching beer styles:', error);

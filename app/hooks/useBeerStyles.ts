@@ -19,7 +19,6 @@ export const useBeerStyles = () => {
       setBeerStyles(styles);
       setBeerStyleNames(names);
       
-      console.log('✅ Beer styles loaded:', styles.length);
     } catch (err) {
       console.error('❌ Error loading beer styles:', err);
       setError('Failed to load beer styles');

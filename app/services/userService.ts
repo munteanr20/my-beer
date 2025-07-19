@@ -8,7 +8,6 @@ export class UserService {
   // Create or update user document
   async createOrUpdateUser(userData: Omit<User, 'createdAt' | 'updatedAt'>): Promise<ApiResponse<User>> {
     try {
-      console.log('Creating/updating user:', userData.uid);
       
       const userRef = doc(db, this.collectionName, userData.uid);
       const userDoc = await getDoc(userRef);
@@ -24,7 +23,6 @@ export class UserService {
         };
         
         await setDoc(userRef, newUser);
-        console.log('User created successfully');
         return { success: true, data: newUser };
       } else {
         // Update existing user
@@ -34,7 +32,6 @@ export class UserService {
         };
         
         await updateDoc(userRef, updateData);
-        console.log('User updated successfully');
         return { success: true, data: { ...userDoc.data() as User, ...updateData } };
       }
     } catch (error) {
@@ -49,17 +46,14 @@ export class UserService {
   // Get user by ID
   async getUser(userId: string): Promise<User | null> {
     try {
-      console.log('Fetching user:', userId);
       
       const userDoc = await getDoc(doc(db, this.collectionName, userId));
       
       if (!userDoc.exists()) {
-        console.log('User not found');
         return null;
       }
       
       const userData = userDoc.data() as User;
-      console.log('User found:', userData.displayName);
       return userData;
     } catch (error) {
       console.error('Error getting user:', error);
@@ -70,13 +64,11 @@ export class UserService {
   // Add achievement to user
   async addAchievement(userId: string, achievementId: string): Promise<ApiResponse<void>> {
     try {
-      console.log(`Adding achievement ${achievementId} to user ${userId}`);
       
       const userRef = doc(db, this.collectionName, userId);
       const userDoc = await getDoc(userRef);
       
       if (!userDoc.exists()) {
-        console.log('User not found, creating user document');
         // Create user document if it doesn't exist
         await setDoc(userRef, {
           uid: userId,
@@ -95,7 +87,6 @@ export class UserService {
         // Check if achievement is already unlocked
         const alreadyUnlocked = achievements.some(a => a.achievementId === achievementId);
         if (alreadyUnlocked) {
-          console.log('Achievement already unlocked');
           return { success: true };
         }
         
@@ -111,7 +102,6 @@ export class UserService {
         });
       }
       
-      console.log('Achievement added successfully');
       return { success: true };
     } catch (error) {
       console.error('Error adding achievement:', error);
@@ -125,16 +115,13 @@ export class UserService {
   // Get user achievements
   async getUserAchievements(userId: string): Promise<UserAchievement[]> {
     try {
-      console.log('Fetching user achievements for:', userId);
       
       const user = await this.getUser(userId);
       if (!user) {
-        console.log('User not found');
         return [];
       }
       
       const achievements = user.achievements || [];
-      console.log('Found achievements:', achievements.length);
       return achievements;
     } catch (error) {
       console.error('Error getting user achievements:', error);
@@ -145,7 +132,6 @@ export class UserService {
   // Get all users (admin function)
   async getAllUsers(): Promise<User[]> {
     try {
-      console.log('Fetching all users...');
       
       const querySnapshot = await getDocs(collection(db, this.collectionName));
       const users: User[] = [];
@@ -157,7 +143,6 @@ export class UserService {
         } as User);
       });
       
-      console.log('Found users:', users.length);
       return users;
     } catch (error) {
       console.error('Error getting all users:', error);

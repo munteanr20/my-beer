@@ -189,7 +189,7 @@ export default function BeerStats({ userId }: BeerStatsProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="body-font text-tavern-primary text-sm">Total Alcohol</p>
-              <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalAlcohol}L</p>
+              <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalAlcohol.toFixed(4)}L</p>
             </div>
             <div className="text-2xl">🔥</div>
           </div>

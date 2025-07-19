@@ -21,7 +21,6 @@ export class LeaderboardService {
 
   async getAllBeersData(): Promise<UserBeerData[]> {
     try {
-      console.log('Fetching all beers data for all users...');
       
       // Get all users
       const usersSnapshot = await getDocs(collection(db, this.usersCollection));
@@ -33,8 +32,6 @@ export class LeaderboardService {
           ...doc.data()
         } as User);
       });
-
-      console.log(`Found ${users.length} users in the system`);
 
       // Get all beers for all users in one query
       const allBeersQuery = query(
@@ -51,8 +48,6 @@ export class LeaderboardService {
           ...doc.data()
         } as Beer);
       });
-
-      console.log(`Found ${allBeers.length} total beers`);
 
       // Group beers by user
       const userBeersMap = new Map<string, Beer[]>();
@@ -74,8 +69,6 @@ export class LeaderboardService {
         user,
         beers: userBeersMap.get(user.uid) || []
       }));
-
-      console.log('All beers data fetched successfully');
       return userBeerData;
     } catch (error) {
       console.error('Error fetching all beers data:', error);
@@ -101,8 +94,6 @@ export class LeaderboardService {
         startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
         break;
     }
-
-    console.log(`Filtering beers from ${startDate.toDateString()} to ${now.toDateString()}`);
 
     const leaderboardEntries: LeaderboardEntry[] = userBeerData.map(userData => {
       const filteredBeers = userData.beers.filter(beer => {

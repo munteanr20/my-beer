@@ -18,7 +18,7 @@ export default function AddBeerForm({ userId}: AddBeerFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  
+  const [cansNumber, setCansNumber] = useState('');
   const { addBeer } = useBeers(userId);
   const { beerStyleNames, loading: stylesLoading, error: stylesError } = useBeerStyles();
   const { addNotification } = useNotification();
@@ -41,6 +41,21 @@ export default function AddBeerForm({ userId}: AddBeerFormProps) {
       return;
     }
 
+    // Parse the number of cans/bottles
+    const numberOfCans = parseInt(cansNumber) || 1;
+    
+    if (numberOfCans < 1) {
+      setError('Number of cans must be at least 1.');
+      setLoading(false);
+      return;
+    }
+
+    if (numberOfCans > 100) {
+      setError('Cannot add more than 100 beers at once.');
+      setLoading(false);
+      return;
+    }
+
     const beerData: AddBeerFormData = {
       name: name.trim(),
       type: type,
@@ -48,17 +63,47 @@ export default function AddBeerForm({ userId}: AddBeerFormProps) {
       alcohol: alcohol.trim() || undefined
     };
 
-    const result = await addBeer(beerData);
+    // Add multiple beers
+    let successCount = 0;
+    let errorCount = 0;
 
-    if (result.success) {
+    for (let i = 0; i < numberOfCans; i++) {
+      const result = await addBeer(beerData);
+      if (result.success) {
+        successCount++;
+      } else {
+        errorCount++;
+      }
+    }
+
+    if (successCount > 0) {
       setSuccess(true);
       setName('');
       setType('');
       setQuantity('');
       setAlcohol('');
-      addNotification('Beer added successfully! 🍺', 'success', 4000);
-    } else {
-      setError(result.error || 'Error adding beer');
+      setCansNumber('');
+      
+      // Show appropriate success message
+      if (successCount === numberOfCans) {
+        addNotification(
+          numberOfCans === 1 
+            ? 'Beer added successfully! 🍺' 
+            : `${successCount} beers added successfully! 🍺`,
+          'success', 
+          4000
+        );
+      } else if (successCount > 0) {
+        addNotification(
+          `${successCount} out of ${numberOfCans} beers added successfully! 🍺`,
+          'success', 
+          4000
+        );
+      }
+    }
+
+    if (errorCount > 0) {
+      setError(`Failed to add ${errorCount} out of ${numberOfCans} beers. Please try again.`);
     }
 
     setLoading(false);
@@ -139,6 +184,23 @@ export default function AddBeerForm({ userId}: AddBeerFormProps) {
             required
           />
         </div>
+
+        <div>
+          <label htmlFor="cansNumber" className="block text-base font-medium text-tavern-primary mb-2">
+            How many 
+          </label>
+          <input
+            type="number"
+            id="cansNumber"
+            value={cansNumber}
+            onChange={(e) => setCansNumber(e.target.value)}
+            className="beer-input w-full px-4 py-3 rounded-lg focus:outline-none"
+            placeholder="
+            Leave empty for 1 beer, or enter a number (max 100)"
+            min="1"
+            max="100"
+          />
+        </div>
         
         {error && (
           <div className="message-error text-sm p-4 rounded-lg">
@@ -150,7 +212,12 @@ export default function AddBeerForm({ userId}: AddBeerFormProps) {
         {success && (
           <div className="md:hidden message-success text-sm p-4 rounded-lg relative">
             <div className="flex items-center justify-between">
-              <span>Beer added successfully! 🍺</span>
+              <span>
+                {cansNumber && parseInt(cansNumber) > 1 
+                  ? `${parseInt(cansNumber)} beers added successfully! 🍺`
+                  : 'Beer added successfully! 🍺'
+                }
+              </span>
               <button
                 onClick={() => setSuccess(false)}
                 className="ml-2 p-1 hover:bg-[var(--tavern-gold)] hover:bg-opacity-20 rounded-full transition-colors duration-200"
@@ -167,7 +234,7 @@ export default function AddBeerForm({ userId}: AddBeerFormProps) {
           disabled={loading}
           className="beer-button w-full py-3 px-4 rounded-lg text-lg disabled:opacity-50 mt-auto"
         >
-          {loading ? 'Pouring...' : 'Add beer 🍺'}
+          {loading ? 'Pouring...' : `Add ${cansNumber ? parseInt(cansNumber) || 1 : 1} beer${cansNumber && parseInt(cansNumber) > 1 ? 's' : ''} 🍺`}
         </button>
       </form>
     </div>

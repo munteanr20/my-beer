@@ -9,7 +9,6 @@ export class AchievementService {
   // Get achievement definitions from database
   async getAchievementDefinitions(): Promise<any[]> {
     try {
-      console.log('🔍 Getting achievement definitions from collection:', this.collectionName);
       const querySnapshot = await getDocs(collection(db, this.collectionName));
       const definitions: any[] = [];
 
@@ -19,9 +18,6 @@ export class AchievementService {
           ...doc.data()
         });
       });
-
-      console.log('📚 Found achievement definitions:', definitions.length);
-      console.log('📋 Achievement titles:', definitions.map(d => d.title));
       
       return definitions;
     } catch (error) {
@@ -33,17 +29,14 @@ export class AchievementService {
   // Get user's unlocked achievements (from user document)
   async getUserAchievements(userId: string): Promise<string[]> {
     try {
-      console.log('🔍 Getting achievements for user:', userId);
       const userDoc = await getDocs(query(collection(db, this.usersCollection), where('__name__', '==', userId)));
       
       if (!userDoc.empty) {
         const userData = userDoc.docs[0].data();
         const achievements = userData.achievements || [];
-        console.log('📋 User achievements found:', achievements);
         return achievements;
       }
       
-      console.log('⚠️ No user document found for userId:', userId);
       return [];
     } catch (error) {
       console.error('❌ Error getting user achievements:', error);
@@ -176,18 +169,14 @@ export class AchievementService {
 
   async initializeUserAchievements(userId: string): Promise<void> {
     try {
-      console.log('Initializing achievements for userId:', userId);
       
       // Check if user already has achievements
       const existingAchievements = await this.getUserAchievements(userId);
       
       if (existingAchievements.length > 0) {
-        console.log('User already has achievements, skipping initialization');
         return; // User already has achievements
       }
 
-      console.log('User has no achievements, ready to unlock them based on progress');
-      console.log('Achievement initialization completed');
     } catch (error) {
       console.error('Error initializing user achievements:', error);
     }

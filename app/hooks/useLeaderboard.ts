@@ -35,7 +35,6 @@ export function useLeaderboard() {
   // Listen for refresh triggers from context
   useEffect(() => {
     if (refreshTrigger > 0) {
-      console.log('Leaderboard refresh triggered by context');
       fetchAllBeerData();
     }
   }, [refreshTrigger]);
