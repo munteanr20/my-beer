@@ -581,3 +581,41 @@
   height: 1px;
   opacity: 0.6;
 }
+
+/* Animated Gradient */
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 3s ease infinite;
+}
+
+/* Hero section theme enhancements */
+.hero-badge {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(44, 24, 16, 0.1));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+[data-theme="light"] .hero-badge {
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(255, 248, 220, 0.1));
+  border: 1px solid rgba(184, 134, 11, 0.3);
+}
+
+.hero-feature-pill {
+  background: linear-gradient(135deg, rgba(205, 127, 50, 0.1), rgba(44, 24, 16, 0.1));
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(205, 127, 50, 0.2);
+}
+
+[data-theme="light"] .hero-feature-pill {
+  background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(255, 248, 220, 0.1));
+  border: 1px solid rgba(139, 69, 19, 0.2);
+}

@@ -6,6 +6,47 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [v1.2.3] - 2025-01-27
+
+### Added
+- Dynamic hero section with animated background elements and floating beer icons
+- Interactive central beer icon with hover effects and orbiting stat elements
+- Animated gradient text effect for main dashboard heading
+- Theme-aware hero section styling with proper light/dark mode support
+- Enhanced dashboard stats with 7 comprehensive metrics instead of 4
+- Modern card design with gradient glow effects and hover animations
+- Feature highlight pills showing Track Stats, Achievements, and Leaderboard
+- Quick stats preview with infinity and goal symbols
+- Live Dashboard status badge with pulsing indicator
+- Theme-specific CSS classes for hero badges and feature pills
+
+### Changed
+- Dashboard hero section completely redesigned with modern, dynamic layout
+- Removed redundant user name from dashboard (now only in navbar)
+- Dashboard welcome message changed from personal greeting to feature-focused
+- BeerStats dashboard variant enhanced with 6 main stats and 3 additional quick info cards
+- Removed unnecessary profile redirect link from dashboard stats
+- Dashboard layout improved with better spacing and visual hierarchy
+- Hero section background now uses tavern-glass class for consistent theming
+- All text elements now use theme-aware classes (text-tavern-primary, etc.)
+- Dashboard stats cards now have hover effects and modern styling
+
+### Fixed
+- Redundancy between navbar greeting and dashboard welcome message
+- Dashboard stats now self-contained without unnecessary navigation
+- Theme consistency across light and dark modes for hero section
+- Proper contrast ratios and readability in both themes
+- Glassmorphism effects that adapt properly to theme changes
+- Animated elements that work consistently in both themes
+
+### Improved
+- Dashboard user experience with cleaner, more focused design
+- Visual hierarchy and information architecture
+- Theme switching experience with proper color adaptation
+- Code maintainability with reusable theme-aware CSS classes
+- Animation performance and smooth transitions
+- Mobile responsiveness for all new dashboard elements
+
 ## [v1.2.2] - 2025-07-20
 
 ### Added

@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useAchievements } from '../../hooks/useAchievements';
+import { useBeers } from '../../hooks/useBeers';
+import { useBeerStyles } from '../../hooks/useBeerStyles';
 import { userService } from '../../services/userService';
 import { User } from '../../types';
 import BeerStats from '../beer/BeerStats';
 import BeerList from '../beer/BeerList';
 import AchievementList from '../achievements/AchievementList';
-import ThemeToggle from '../ui/ThemeToggle';
+import Navbar from '../ui/Navbar';
 import Footer from '../ui/Footer';
 import { LeaderboardProvider } from '../../contexts/LeaderboardContext';
 
@@ -21,6 +23,10 @@ export default function ProfilePage() {
   
   // Get real achievement data
   const { achievements, loading: achievementsLoading, unlockedCount, totalCount } = useAchievements(user?.uid || '');
+  
+  // Get beer data for enhanced insights
+  const { beers, totalBeers, loading: beersLoading } = useBeers(user?.uid || '');
+  const { beerStyles, loading: stylesLoading } = useBeerStyles();
 
   // Fetch user data with creation date
   useEffect(() => {
@@ -39,6 +45,27 @@ export default function ProfilePage() {
 
     fetchUserData();
   }, [user?.uid]);
+
+  // Calculate total alcohol more accurately
+  const totalAlcohol = beers.reduce((total, beer) => {
+    if (beer.alcohol && beer.quantity) {
+      // Clean and parse alcohol percentage
+      const cleanAlcohol = beer.alcohol.replace(/[^\d.]/g, '');
+      const alcohol = parseFloat(cleanAlcohol);
+      
+      // Clean and parse quantity in ml
+      const cleanQuantity = beer.quantity.replace(/[^\d.]/g, '');
+      const quantity = parseFloat(cleanQuantity);
+      
+      // Calculate pure alcohol in liters: (alcohol_percentage / 100) * quantity_ml / 1000
+      // Example: 5% alcohol in 330ml = (5/100) * 330 / 1000 = 0.0165 liters pure alcohol
+      if (!isNaN(alcohol) && !isNaN(quantity) && alcohol > 0 && quantity > 0) {
+        return total + (alcohol / 100) * (quantity / 1000);
+      }
+    }
+    return total;
+  }, 0);
+
 
   const handleLogout = async () => {
     await logout();
@@ -67,85 +94,8 @@ export default function ProfilePage() {
   return (
     <LeaderboardProvider>
     <div className="min-h-screen relative overflow-hidden tavern-bg wood-texture">
-      {/* Enhanced Header with Gradient */}
-      <header className="relative z-10 bg-gradient-to-b from-[var(--tavern-dark)] via-[var(--tavern-dark)] to-[var(--tavern-dark)]/95 shadow-2xl border-b border-[var(--tavern-copper)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-between items-center py-6 sm:py-4 space-y-6 sm:space-y-0">
-            {/* Logo and Title Section with Enhanced Styling */}
-            <div className="flex flex-col sm:flex-row items-center space-y-3 sm:space-y-0 sm:space-x-4">
-              <div className="text-6xl sm:text-5xl lg:text-4xl transform hover:scale-110 transition-all duration-300 hover:rotate-12">🍺</div>
-              <div className="flex flex-col items-center sm:flex-row sm:items-center sm:space-x-4">
-                <h1 className="heading-font text-3xl sm:text-3xl lg:text-4xl font-bold text-[var(--tavern-gold)] mb-1 sm:mb-0 text-center sm:text-left" style={{ textShadow: '3px 3px 6px var(--tavern-copper)' }}>
-                  Ghimbav's Tavern
-                </h1>
-                <span className="hidden sm:inline text-tavern-accent text-3xl animate-pulse">|</span>
-                <span className="body-font text-sm sm:text-base text-[var(--tavern-cream)] opacity-90 mt-2 font-semibold text-center sm:text-left bg-[var(--tavern-copper)]/20 px-3 py-1 rounded-full">
-                  Profile
-                </span>
-              </div>
-            </div>
-
-            {/* Enhanced User Info and Actions Section */}
-            <div className="flex flex-col items-center space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6 w-full sm:w-auto">
-              {/* Enhanced User Profile Section */}
-              <div className="flex flex-col items-center space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4 order-1 sm:order-1">
-                {/* Enhanced Profile Image with Glow Effect */}
-                <div className="relative group">
-                  {user.photoURL ? (
-                    <img
-                      src={user.photoURL}
-                      alt="Profile"
-                      className="w-14 h-14 sm:w-12 sm:h-12 rounded-full border-3 border-[var(--tavern-gold)] shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-14 h-14 sm:w-12 sm:h-12 bg-gradient-to-br from-[var(--tavern-copper)] to-[var(--tavern-gold)] rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                      <span className="text-[var(--tavern-dark)] text-xl sm:text-lg font-bold">
-                        {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 rounded-full bg-[var(--tavern-gold)]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                
-                {/* Enhanced Welcome Text and Name */}
-                <div className="flex flex-col items-center space-y-1 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-3">
-                  <div className="body-font text-sm sm:text-base text-[var(--tavern-cream)] font-medium text-center sm:text-left" style={{ textShadow: '1px 1px 2px var(--tavern-copper)' }}>
-                    Welcome back,
-                  </div>
-                  <div className="body-font text-base sm:text-lg text-[var(--tavern-gold)] font-bold text-center sm:text-left" style={{ textShadow: '2px 2px 4px var(--tavern-copper)' }}>
-                    {user.displayName || user.email?.split('@')[0]}
-                  </div>
-                </div>
-              </div>
-
-              {/* Enhanced Action Buttons with Better Styling */}
-              <div className="flex flex-row items-center justify-center space-x-3 sm:flex-row sm:space-x-4 order-2 sm:order-2 mt-4 sm:mt-0">
-                <ThemeToggle />
-                <a
-                  href="/"
-                  className="beer-button px-5 py-2.5 rounded-lg transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 hover:scale-105 hover:shadow-lg transform"
-                >
-                  <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                  </svg>
-                  <span className="hidden sm:inline">Dashboard</span>
-                  <span className="sm:hidden">Home</span>
-                </a>
-                <button
-                  onClick={handleLogout}
-                  className="beer-button px-5 py-2.5 rounded-lg transition-all duration-300 text-sm sm:text-base flex items-center space-x-2 hover:scale-105 hover:shadow-lg transform"
-                >
-                  <svg className="w-4 h-4 sm:hidden flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" style={{ margin: 0 }}>
-                    <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h11.586l-1.293 1.293z" clipRule="evenodd" />
-                  </svg>
-                  <span className="hidden sm:inline">Leave the Tavern</span>
-                  <span className="sm:hidden">Exit</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Reusable Navbar Component */}
+      <Navbar currentPage="Profile"/>
 
       {/* Enhanced Main Content with Better Spacing */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -287,6 +237,164 @@ export default function ProfilePage() {
                 <BeerStats userId={user.uid} variant="profile" />
               </div>
               
+              {/* Personal Beer Journey Insights */}
+              <div className="tavern-glass rounded-2xl p-8 border border-[var(--tavern-copper)] shadow-2xl">
+                <h3 className="heading-font text-2xl font-bold text-[var(--tavern-gold)] mb-6 flex items-center space-x-3">
+                  <span className="text-3xl">🍺</span>
+                  <span>Your Beer Journey</span>
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {/* Total Beers */}
+                  <div className="text-center p-4 rounded-xl bg-[var(--tavern-copper)]/10 hover:bg-[var(--tavern-copper)]/20 transition-all duration-300">
+                    <div className="text-3xl mb-2">🍺</div>
+                    <div className="heading-font text-2xl font-bold text-[var(--tavern-gold)]">
+                      {beersLoading ? '...' : totalBeers}
+                    </div>
+                    <div className="body-font text-sm text-tavern-primary opacity-80">Total Beers</div>
+                  </div>
+                  
+                  {/* Unique Types */}
+                  <div className="text-center p-4 rounded-xl bg-[var(--tavern-copper)]/10 hover:bg-[var(--tavern-copper)]/20 transition-all duration-300">
+                    <div className="text-3xl mb-2">🎨</div>
+                    <div className="heading-font text-2xl font-bold text-[var(--tavern-gold)]">
+                      {beersLoading ? '...' : new Set(beers.map(b => b.type)).size}
+                    </div>
+                    <div className="body-font text-sm text-tavern-primary opacity-80">Unique Types</div>
+                  </div>
+                  
+                  {/* Total Alcohol */}
+                  <div className="text-center p-4 rounded-xl bg-[var(--tavern-copper)]/10 hover:bg-[var(--tavern-copper)]/20 transition-all duration-300">
+                    <div className="text-3xl mb-2">🍺</div>
+                    <div className="heading-font text-2xl font-bold text-[var(--tavern-gold)]">
+                      {totalAlcohol.toFixed(2)} L
+                    </div>
+                    <div className="body-font text-sm text-tavern-primary opacity-80">Total Alcohol</div>
+                  </div>
+                  {/* Days Active */}
+                  <div className="text-center p-4 rounded-xl bg-[var(--tavern-copper)]/10 hover:bg-[var(--tavern-copper)]/20 transition-all duration-300">
+                    <div className="text-3xl mb-2">📅</div>
+                    <div className="heading-font text-2xl font-bold text-[var(--tavern-gold)]">
+                      {beersLoading ? '...' : beers.length > 0 
+                        ? new Set(beers.map(b => new Date(b.createdAt).toDateString())).size
+                        : '0'
+                      }
+                    </div>
+                    <div className="body-font text-sm text-tavern-primary opacity-80">Days Active</div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Recent Activity & Insights */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Recent Beers */}
+                <div className="tavern-glass rounded-2xl p-6 border border-[var(--tavern-copper)] shadow-2xl">
+                  <h4 className="heading-font text-xl font-bold text-[var(--tavern-gold)] mb-4 flex items-center space-x-2">
+                    <span className="text-2xl">📝</span>
+                    <span>Recent Activity</span>
+                  </h4>
+                  
+                  {beersLoading ? (
+                    <div className="space-y-3">
+                      {[1, 2, 3].map(i => (
+                        <div key={i} className="animate-pulse">
+                          <div className="h-4 bg-[var(--tavern-copper)]/30 rounded mb-2"></div>
+                          <div className="h-3 bg-[var(--tavern-copper)]/20 rounded"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : beers.length > 0 ? (
+                    <div className="space-y-3">
+                      {beers.slice(0, 5).map((beer, index) => (
+                        <div key={beer.id} className="flex items-center justify-between p-3 rounded-lg bg-[var(--tavern-copper)]/10 hover:bg-[var(--tavern-copper)]/20 transition-all duration-300">
+                          <div className="flex items-center space-x-3">
+                            <div className="text-2xl">🍺</div>
+                            <div>
+                              <p className="body-font font-semibold text-tavern-primary">{beer.name}</p>
+                              <p className="body-font text-sm text-tavern-primary opacity-70">{beer.type}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="body-font text-sm text-tavern-primary opacity-70">
+                              {new Date(beer.createdAt).toLocaleDateString()}
+                            </p>
+                            {beer.alcohol && (
+                              <p className="body-font text-xs text-tavern-primary opacity-60">{beer.alcohol}%</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <div className="text-4xl mb-4">🍺</div>
+                      <p className="body-font text-tavern-primary opacity-70">No beers logged yet</p>
+                      <a href="/" className="beer-button mt-4 px-6 py-2 rounded-lg text-sm inline-block">
+                        Add Your First Beer
+                      </a>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Favorite Types */}
+                <div className="tavern-glass rounded-2xl p-6 border border-[var(--tavern-copper)] shadow-2xl">
+                  <h4 className="heading-font text-xl font-bold text-[var(--tavern-gold)] mb-4 flex items-center space-x-2">
+                    <span className="text-2xl">❤️</span>
+                    <span>Favorite Types</span>
+                  </h4>
+                  
+                  {beersLoading ? (
+                    <div className="space-y-3">
+                      {[1, 2, 3].map(i => (
+                        <div key={i} className="animate-pulse">
+                          <div className="h-4 bg-[var(--tavern-copper)]/30 rounded mb-2"></div>
+                          <div className="h-3 bg-[var(--tavern-copper)]/20 rounded"></div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : beers.length > 0 ? (
+                    <div className="space-y-3">
+                      {(() => {
+                        const typeCounts = beers.reduce((acc, beer) => {
+                          acc[beer.type] = (acc[beer.type] || 0) + 1;
+                          return acc;
+                        }, {} as Record<string, number>);
+                        
+                        const sortedTypes = Object.entries(typeCounts)
+                          .sort(([,a], [,b]) => b - a)
+                          .slice(0, 5);
+                        
+                        return sortedTypes.map(([type, count]) => (
+                          <div key={type} className="flex items-center justify-between p-3 rounded-lg bg-[var(--tavern-copper)]/10 hover:bg-[var(--tavern-copper)]/20 transition-all duration-300">
+                            <div className="flex items-center space-x-3">
+                              <div className="text-2xl">🍺</div>
+                              <div>
+                                <p className="body-font font-semibold text-tavern-primary">{type}</p>
+                                <p className="body-font text-sm text-tavern-primary opacity-70">{count} beers</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="w-16 bg-[var(--tavern-copper)]/30 rounded-full h-2">
+                                <div 
+                                  className="bg-[var(--tavern-gold)] h-2 rounded-full transition-all duration-500"
+                                  style={{ width: `${(count / beers.length) * 100}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          </div>
+                        ));
+                      })()}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <div className="text-4xl mb-4">❤️</div>
+                      <p className="body-font text-tavern-primary opacity-70">No favorites yet</p>
+                      <p className="body-font text-sm text-tavern-primary opacity-50">Start logging beers to see your preferences</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
               {/* Enhanced Quick Stats Cards with Real Data */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Next Achievement Goal */}
@@ -424,50 +532,214 @@ export default function ProfilePage() {
           )}
 
           {activeTab === 'collection' && (
-            <div className="tavern-glass rounded-2xl p-8 border border-[var(--tavern-copper)] shadow-2xl animate-fadeIn">
-              <BeerList userId={user.uid} />
+            <div className="animate-fadeIn">
+              {/* Collection Header with Stats */}
+              <div className="tavern-glass rounded-2xl p-6 border border-[var(--tavern-copper)] shadow-2xl mb-8">
+                <div className="flex flex-col md:flex-row items-center justify-between">
+                  <div>
+                    <h3 className="heading-font text-2xl font-bold text-[var(--tavern-gold)] mb-2 flex items-center space-x-3">
+                      <span className="text-3xl">📚</span>
+                      <span>Your Beer Collection</span>
+                    </h3>
+                    <p className="body-font text-tavern-primary opacity-80">
+                      {beersLoading ? 'Loading your collection...' : `${totalBeers} beers logged`}
+                    </p>
+                  </div>
+                  
+                  <div className="flex items-center space-x-4 mt-4 md:mt-0">
+                    <a
+                      href="/"
+                      className="beer-button px-6 py-3 rounded-xl text-sm flex items-center space-x-3 hover:scale-105 transition-all duration-300"
+                    >
+                      <span className="text-lg">🍺</span>
+                      <span>Add New Beer</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Beer List */}
+              <div className="tavern-glass rounded-2xl p-8 border border-[var(--tavern-copper)] shadow-2xl">
+                <BeerList userId={user.uid} showHeader={false} />
+              </div>
             </div>
           )}
 
           {activeTab === 'achievements' && (
             <div className="animate-fadeIn">
-              <AchievementList userId={user.uid} />
+              {/* Achievements Header with Progress */}
+              <div className="tavern-glass rounded-2xl p-6 border border-[var(--tavern-copper)] shadow-2xl mb-8">
+                <div className="flex flex-col md:flex-row items-center justify-between">
+                  <div>
+                    <h3 className="heading-font text-2xl font-bold text-[var(--tavern-gold)] mb-2 flex items-center space-x-3">
+                      <span className="text-3xl">🏆</span>
+                      <span>Your Achievements</span>
+                    </h3>
+                    <p className="body-font text-tavern-primary opacity-80">
+                      {achievementsLoading ? 'Loading achievements...' : `${unlockedCount} of ${totalCount} unlocked`}
+                    </p>
+                  </div>
+                  
+                  <div className="mt-4 md:mt-0">
+                    <div className="flex items-center space-x-4">
+                      <div className="text-center">
+                        <div className="heading-font text-3xl font-bold text-[var(--tavern-gold)]">
+                          {totalCount > 0 ? Math.round((unlockedCount / totalCount) * 100) : 0}%
+                        </div>
+                        <div className="body-font text-sm text-tavern-primary opacity-70">Completion</div>
+                      </div>
+                      <div className="w-32 bg-[var(--tavern-copper)]/30 rounded-full h-3">
+                        <div 
+                          className="bg-gradient-to-r from-[var(--tavern-gold)] to-[var(--tavern-copper)] h-3 rounded-full transition-all duration-500"
+                          style={{ width: `${totalCount > 0 ? (unlockedCount / totalCount) * 100 : 0}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Achievement List */}
+              <div className="tavern-glass rounded-2xl p-8 border border-[var(--tavern-copper)] shadow-2xl">
+                <AchievementList userId={user.uid} showHeader={false} />
+              </div>
             </div>
           )}
 
           {activeTab === 'settings' && (
-            <div className="tavern-glass rounded-2xl p-8 border border-[var(--tavern-copper)] shadow-2xl animate-fadeIn">
-              <h3 className="text-2xl font-semibold mb-6 text-tavern-primary">
-                Profile Settings
-              </h3>
+            <div className="animate-fadeIn">
+              {/* Settings Header */}
+              <div className="tavern-glass rounded-2xl p-6 border border-[var(--tavern-copper)] shadow-2xl mb-8">
+                <h3 className="heading-font text-2xl font-bold text-[var(--tavern-gold)] mb-2 flex items-center space-x-3">
+                  <span className="text-3xl">⚙️</span>
+                  <span>Profile Settings</span>
+                </h3>
+                <p className="body-font text-tavern-primary opacity-80">
+                  Manage your account and preferences
+                </p>
+              </div>
               
-              <div className="space-y-6">
-                <div className="flex items-center justify-between p-6 bg-[var(--tavern-copper)]/10 rounded-xl hover:bg-[var(--tavern-copper)]/20 transition-all duration-300 group">
-                  <div>
-                    <p className="body-font font-semibold text-tavern-primary text-lg">Theme</p>
-                    <p className="body-font text-sm text-tavern-primary opacity-80">Customize your tavern experience</p>
+              {/* Settings Content */}
+              <div className="tavern-glass rounded-2xl p-8 border border-[var(--tavern-copper)] shadow-2xl">
+                <div className="space-y-6">
+                  {/* Account Info */}
+                  <div className="p-6 bg-[var(--tavern-copper)]/10 rounded-xl">
+                    <h4 className="body-font font-semibold text-tavern-primary text-lg mb-4 flex items-center space-x-2">
+                      <span className="text-xl">👤</span>
+                      <span>Account Information</span>
+                    </h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="body-font text-tavern-primary opacity-80">Email</span>
+                        <span className="body-font text-tavern-primary font-medium">{user.email}</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="body-font text-tavern-primary opacity-80">Display Name</span>
+                        <span className="body-font text-tavern-primary font-medium">
+                          {user.displayName || 'Not set'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="body-font text-tavern-primary opacity-80">Member Since</span>
+                        <span className="body-font text-tavern-primary font-medium">
+                          {userData?.createdAt ? (
+                            (() => {
+                              try {
+                                let userCreatedAt: Date;
+                                if (userData.createdAt && typeof userData.createdAt === 'object' && 'seconds' in userData.createdAt) {
+                                  userCreatedAt = new Date(userData.createdAt.seconds * 1000);
+                                } else if (typeof userData.createdAt === 'string') {
+                                  userCreatedAt = new Date(userData.createdAt);
+                                } else if (typeof userData.createdAt === 'number') {
+                                  userCreatedAt = new Date(userData.createdAt);
+                                } else {
+                                  return 'Recently';
+                                }
+                                
+                                if (isNaN(userCreatedAt.getTime())) {
+                                  return 'Recently';
+                                }
+                                
+                                const july21st2025 = new Date('2025-07-21');
+                                
+                                if (userCreatedAt < july21st2025) {
+                                  return 'Prehistorical Era';
+                                } else {
+                                  return userCreatedAt.toLocaleDateString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                  });
+                                }
+                              } catch (error) {
+                                return 'Recently';
+                              }
+                            })()
+                          ) : 'Recently'}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <ThemeToggle />
-                </div>
-                
-                <div className="flex items-center justify-between p-6 bg-[var(--tavern-copper)]/10 rounded-xl hover:bg-[var(--tavern-copper)]/20 transition-all duration-300 group">
-                  <div>
-                    <p className="body-font font-semibold text-tavern-primary text-lg">Notifications</p>
-                    <p className="body-font text-sm text-tavern-primary opacity-80">Achievement and milestone alerts</p>
+                  
+                  {/* Preferences */}
+                  <div className="p-6 bg-[var(--tavern-copper)]/10 rounded-xl">
+                    <h4 className="body-font font-semibold text-tavern-primary text-lg mb-4 flex items-center space-x-2">
+                      <span className="text-xl">🎨</span>
+                      <span>Preferences</span>
+                    </h4>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="body-font font-semibold text-tavern-primary">Theme</p>
+                          <p className="body-font text-sm text-tavern-primary opacity-80">Customize your tavern experience</p>
+                        </div>
+                        <div className="text-[var(--tavern-cream)] opacity-60">
+                          <span className="text-sm">Available in navbar</span>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="body-font font-semibold text-tavern-primary">Notifications</p>
+                          <p className="body-font text-sm text-tavern-primary opacity-80">Achievement and milestone alerts</p>
+                        </div>
+                        <button className="beer-button px-6 py-3 rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-300">
+                          Configure
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <button className="beer-button px-6 py-3 rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-300">
-                    Configure
-                  </button>
-                </div>
-                
-                <div className="flex items-center justify-between p-6 bg-[var(--tavern-copper)]/10 rounded-xl hover:bg-[var(--tavern-copper)]/20 transition-all duration-300 group">
-                  <div>
-                    <p className="body-font font-semibold text-tavern-primary text-lg">Data Export</p>
-                    <p className="body-font text-sm text-tavern-primary opacity-80">Download your beer journey data</p>
+                  
+                  {/* Data Management */}
+                  <div className="p-6 bg-[var(--tavern-copper)]/10 rounded-xl">
+                    <h4 className="body-font font-semibold text-tavern-primary text-lg mb-4 flex items-center space-x-2">
+                      <span className="text-xl">📊</span>
+                      <span>Data Management</span>
+                    </h4>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="body-font font-semibold text-tavern-primary">Data Export</p>
+                          <p className="body-font text-sm text-tavern-primary opacity-80">Download your beer journey data</p>
+                        </div>
+                        <button className="beer-button px-6 py-3 rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-300">
+                          Export
+                        </button>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="body-font font-semibold text-tavern-primary">Account Statistics</p>
+                          <p className="body-font text-sm text-tavern-primary opacity-80">
+                            {totalBeers} beers logged • {unlockedCount} achievements unlocked
+                          </p>
+                        </div>
+                        <div className="text-[var(--tavern-gold)] font-semibold">
+                          Active User
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <button className="beer-button px-6 py-3 rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-300">
-                    Export
-                  </button>
                 </div>
               </div>
             </div>
