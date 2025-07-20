@@ -6,6 +6,46 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [v1.2.2] - 2025-07-20
+
+### Added
+- Reusable Footer component for consistent footer across all pages
+- Real achievement data integration in profile page overview tab
+- Dynamic "Next Goal" card showing closest achievement to unlock
+- Achievement progress tracking with real-time data
+- Recent achievements display showing up to 3 most recent unlocks
+- User creation date logic with "Prehistorical Era" for early users
+- Firebase timestamp conversion for accurate user creation dates
+- Profile page tab navigation with minimalist text-only design
+- Enhanced profile header with glassmorphism and animations
+- Real-time achievement progress bars with percentage completion
+- Loading states for achievement data with skeleton animations
+
+### Changed
+- Profile page overview tab now uses real achievement data instead of static content
+- Footer extracted to reusable component for maintainability and consistency
+- Profile page tabs redesigned with elegant underline animations
+- "Next Goal" card now shows achievement with highest progress percentage
+- User creation date display now shows actual dates or "Prehistorical Era"
+- Achievement progress cards display real unlocked/total counts
+- Profile page layout improved with better spacing and animations
+
+### Fixed
+- Firebase timestamp conversion for proper date display
+- Achievement data loading and error handling
+- Profile page date logic with robust error handling
+- Footer component reusability across all pages
+- Achievement progress calculation accuracy
+- User creation date fallback handling
+
+### Improved
+- Profile page user experience with real-time data
+- Code maintainability with reusable footer component
+- Achievement system integration and display
+- Date handling robustness with multiple format support
+- Loading states and error handling throughout profile page
+- Visual consistency with tavern theme across all components
+
 ## [v1.2.1] - 2025-01-27
 
 ### Added

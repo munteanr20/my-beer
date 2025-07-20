@@ -1,11 +1,11 @@
 'use client';
 
 import { useAuth } from '../hooks/useAuth';
-import { getCurrentYear } from '../lib/utils';
 import AddBeerForm from './beer/AddBeerForm';
 import BeerList from './beer/BeerList';
 import BeerStats from './beer/BeerStats';
 import ThemeToggle from './ui/ThemeToggle';
+import Footer from './ui/Footer';
 import AchievementList from './achievements/AchievementList';
 import Leaderboard from './leaderboard/Leaderboard';
 import { LeaderboardProvider } from '../contexts/LeaderboardContext';
@@ -79,9 +79,19 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Theme Toggle and Logout Buttons - Mobile Layout */}
+              {/* Theme Toggle, Profile and Logout Buttons - Mobile Layout */}
               <div className="flex flex-row items-center justify-center space-x-3 sm:flex-row sm:space-x-3 order-2 sm:order-2 mt-4 sm:mt-0">
                 <ThemeToggle />
+                <a
+                  href="/profile"
+                  className="beer-button px-4 sm:px-4 py-2 sm:py-2 rounded-md transition-colors text-sm sm:text-base flex items-center space-x-2"
+                >
+                  <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                  </svg>
+                  <span className="hidden sm:inline">Profile</span>
+                  <span className="sm:hidden">Profile</span>
+                </a>
                 <button
                   onClick={handleLogout}
                   className="beer-button px-4 sm:px-4 py-2 sm:py-2 rounded-md transition-colors text-sm sm:text-base flex items-center space-x-2"
@@ -102,7 +112,7 @@ export default function Dashboard() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Statistics Section */}
         <div className="mb-8">
-          <BeerStats userId={user.uid} />
+          <BeerStats userId={user.uid} variant="dashboard" />
         </div>
         
         <div className="dashboard-grid-container">
@@ -135,69 +145,8 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 bg-[var(--tavern-dark)] border-t border-[var(--tavern-copper)] mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Tavern Info */}
-            <div className="text-center md:text-left">
-              <h3 className="heading-font text-xl font-bold text-[var(--tavern-gold)] mb-3" style={{ textShadow: '1px 1px 2px var(--tavern-copper)' }}>
-                Ghimbav's Tavern
-              </h3>
-              <p className="body-font text-[var(--tavern-cream)] text-md">
-              Hark, travelers! My friend's simple wish to count his beers sparked an idea. How could I help? Thus, I forged the finest establishment for tracking your beer journey across the realm – an app to record every cherished pint. Embark on your own legendary beer odyssey today!
-              </p>
-            </div>
-            
-            {/* Contact Info */}
-            <div className="text-center md:text-right">
-              <h4 className="body-font font-semibold text-[var(--tavern-gold)] mb-3" style={{ textShadow: '1px 1px 1px var(--tavern-copper)' }}>
-                Tavern Keeper
-              </h4>
-              <p className="body-font text-[var(--tavern-cream)] text-md">
-                For support and inquiries
-              </p>              
-              {/* Social Links */}
-              <div className="mt-4 space-y-2">
-                <a href="mailto:razvan.muntean@best-eu.org" className="flex items-center justify-center md:justify-end space-x-2 text-[var(--tavern-cream)] hover:text-[var(--tavern-gold)] transition-colors">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
-                  </svg>
-                  <span className="body-font text-sm">Email</span>
-                </a>
-                <a href="https://www.instagram.com/munteanr20/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center md:justify-end space-x-2 text-[var(--tavern-cream)] hover:text-[var(--tavern-gold)] transition-colors">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                  </svg>
-                  <span className="body-font text-sm">Instagram</span>
-                </a>
-                <a href="https://revolut.me/munteanr20" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center md:justify-end space-x-2 text-[var(--tavern-cream)] hover:text-[var(--tavern-gold)] transition-colors">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M 5 2  L 5 18  L 7 18 M 5 2  L 12 2  A 4 4 0 0 1 12 10 L 7 10  L 7 18 M 11 10 L 17 18 L 15 18 L 9 10 Z"/>
-                  </svg>
-                  <span className="body-font text-sm">Revolut</span>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="border-t border-[var(--tavern-copper)] mt-8 pt-6">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <p className="body-font text-[var(--tavern-cream)] text-sm text-center md:text-left">
-                © {getCurrentYear()} Ghimbav's Tavern. All rights reserved.
-              </p>
-              <div className="flex items-center space-x-4 mt-4 md:mt-0">
-                <span className="text-lg">🍺</span>
-                <span className="body-font text-[var(--tavern-cream)] text-sm">
-                  Crafted with ale and magic
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      {/* Reusable Footer Component */}
+      <Footer />
     </div>
     </LeaderboardProvider>
   );
