@@ -6,6 +6,102 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [v1.3.0] - 2025-07-22
+
+### Added
+- User search bar with live search and dropdown results (desktop and mobile)
+- Navigation to user profile pages from search results
+
+### Changed
+- Refactored ProfilePage to accept userData as a prop and fetch data server-side
+- Disabled 'Add Beer' button on other users' profiles
+- Improved profile dropdown menu logic for desktop/mobile separation
+
+### Fixed
+- Firestore Timestamp serialization for Next.js App Router compatibility
+- Various UI/UX improvements to search and profile flows 
+
+## [v1.2.3] - 2025-07-20
+
+### Added
+- Dynamic hero section with animated background elements and floating beer icons
+- Interactive central beer icon with hover effects and orbiting stat elements
+- Animated gradient text effect for main dashboard heading
+- Theme-aware hero section styling with proper light/dark mode support
+- Enhanced dashboard stats with 7 comprehensive metrics instead of 4
+- Modern card design with gradient glow effects and hover animations
+- Feature highlight pills showing Track Stats, Achievements, and Leaderboard
+- Quick stats preview with infinity and goal symbols
+- Live Dashboard status badge with pulsing indicator
+- Theme-specific CSS classes for hero badges and feature pills
+
+### Changed
+- Dashboard hero section completely redesigned with modern, dynamic layout
+- Removed redundant user name from dashboard (now only in navbar)
+- Dashboard welcome message changed from personal greeting to feature-focused
+- BeerStats dashboard variant enhanced with 6 main stats and 3 additional quick info cards
+- Removed unnecessary profile redirect link from dashboard stats
+- Dashboard layout improved with better spacing and visual hierarchy
+- Hero section background now uses tavern-glass class for consistent theming
+- All text elements now use theme-aware classes (text-tavern-primary, etc.)
+- Dashboard stats cards now have hover effects and modern styling
+
+### Fixed
+- Redundancy between navbar greeting and dashboard welcome message
+- Dashboard stats now self-contained without unnecessary navigation
+- Theme consistency across light and dark modes for hero section
+- Proper contrast ratios and readability in both themes
+- Glassmorphism effects that adapt properly to theme changes
+- Animated elements that work consistently in both themes
+
+### Improved
+- Dashboard user experience with cleaner, more focused design
+- Visual hierarchy and information architecture
+- Theme switching experience with proper color adaptation
+- Code maintainability with reusable theme-aware CSS classes
+- Animation performance and smooth transitions
+- Mobile responsiveness for all new dashboard elements
+
+## [v1.2.2] - 2025-07-20
+
+### Added
+- Reusable Footer component for consistent footer across all pages
+- Real achievement data integration in profile page overview tab
+- Dynamic "Next Goal" card showing closest achievement to unlock
+- Achievement progress tracking with real-time data
+- Recent achievements display showing up to 3 most recent unlocks
+- User creation date logic with "Prehistorical Era" for early users
+- Firebase timestamp conversion for accurate user creation dates
+- Profile page tab navigation with minimalist text-only design
+- Enhanced profile header with glassmorphism and animations
+- Real-time achievement progress bars with percentage completion
+- Loading states for achievement data with skeleton animations
+
+### Changed
+- Profile page overview tab now uses real achievement data instead of static content
+- Footer extracted to reusable component for maintainability and consistency
+- Profile page tabs redesigned with elegant underline animations
+- "Next Goal" card now shows achievement with highest progress percentage
+- User creation date display now shows actual dates or "Prehistorical Era"
+- Achievement progress cards display real unlocked/total counts
+- Profile page layout improved with better spacing and animations
+
+### Fixed
+- Firebase timestamp conversion for proper date display
+- Achievement data loading and error handling
+- Profile page date logic with robust error handling
+- Footer component reusability across all pages
+- Achievement progress calculation accuracy
+- User creation date fallback handling
+
+### Improved
+- Profile page user experience with real-time data
+- Code maintainability with reusable footer component
+- Achievement system integration and display
+- Date handling robustness with multiple format support
+- Loading states and error handling throughout profile page
+- Visual consistency with tavern theme across all components
+
 ## [v1.2.1] - 2025-01-27
 
 ### Added

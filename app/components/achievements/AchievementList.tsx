@@ -6,12 +6,13 @@ import AchievementCard from './AchievementCard';
 
 interface AchievementListProps {
   userId: string;
+  showHeader?: boolean;
 }
 
 type FilterType = 'all' | 'unlocked' | 'locked';
 type SortType = 'progress' | 'name' | 'type';
 
-export default function AchievementList({ userId }: AchievementListProps) {
+export default function AchievementList({ userId, showHeader = true }: AchievementListProps) {
   const [filter, setFilter] = useState<FilterType>('all');
   const [sortBy, setSortBy] = useState<SortType>('progress');
   const [currentPage, setCurrentPage] = useState(1);
@@ -110,26 +111,28 @@ export default function AchievementList({ userId }: AchievementListProps) {
   return (
     <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)] border-2">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-        <div>
-          <h3 className="text-2xl font-semibold mb-6 text-tavern-primary">
-            Tavern Achievements
-          </h3>
-          <p className="body-font font-bold text-tavern-primary text-md">
-            {unlockedCount} of {totalCount} achievements unlocked
-          </p>
-        </div>
-        
-        {/* Progress Bar */}
-        <div className="mt-4 sm:mt-0">
-          <div className="w-32 bg-[var(--tavern-copper)] rounded-full h-3">
-            <div 
-              className="bg-[var(--tavern-gold)] h-3 rounded-full transition-all duration-500"
-              style={{ width: `${totalCount > 0 ? (unlockedCount / totalCount) * 100 : 0}%` }}
-            ></div>
+      {showHeader && (
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+          <div>
+            <h3 className="text-2xl font-semibold mb-6 text-tavern-primary">
+              Tavern Achievements
+            </h3>
+            <p className="body-font font-bold text-tavern-primary text-md">
+              {unlockedCount} of {totalCount} achievements unlocked
+            </p>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="mt-4 sm:mt-0">
+            <div className="w-32 bg-[var(--tavern-copper)] rounded-full h-3">
+              <div 
+                className="bg-[var(--tavern-gold)] h-3 rounded-full transition-all duration-500"
+                style={{ width: `${totalCount > 0 ? (unlockedCount / totalCount) * 100 : 0}%` }}
+              ></div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Filters and Sort */}
       <div className="flex flex-col sm:flex-row gap-4 mb-6">

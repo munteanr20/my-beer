@@ -10,13 +10,11 @@ import { db } from '../lib/firebase';
 import { Beer } from '../types';
 import { beerService } from '../services/beerService';
 import { achievementService } from '../services/achievementService';
-import { useLeaderboardContext } from '../contexts/LeaderboardContext';
 
 export const useBeers = (userId: string) => {
   const [beers, setBeers] = useState<Beer[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalBeers, setTotalBeers] = useState(0);
-  const { triggerRefresh } = useLeaderboardContext();
 
   // Fetch beers for the current user with real-time listener
   const fetchBeers = async () => {
@@ -91,7 +89,6 @@ export const useBeers = (userId: string) => {
         try {
           const userStats = await beerService.getUserStats(userId);
           await achievementService.checkAchievements(userId, userStats);
-          triggerRefresh();
         } catch (error) {
           console.error('Error updating achievements after adding beer:', error);
         }
