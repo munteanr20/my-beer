@@ -8,11 +8,12 @@ function serializeUser(user: User | null) {
     ...user,
     createdAt: (user.createdAt && typeof user.createdAt.toDate === 'function') ? user.createdAt.toDate().toISOString() : user.createdAt,
     updatedAt: (user.updatedAt && typeof user.updatedAt.toDate === 'function') ? user.updatedAt.toDate().toISOString() : user.updatedAt,
-    // Add more fields here if you have other Firestore Timestamps
   };
 }
 
-export default async function UserProfilePage({ params }: { params: { uid: string } }) {
+export default async function UserProfilePage(
+  { params }: { params: { uid: string } }
+) {
   const userData = await userService.getUser(params.uid);
   return <ProfilePage userData={serializeUser(userData)} />;
 } 
