@@ -9,8 +9,13 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen tavern-bg wood-texture">
-        <p className="text-xl font-semibold text-tavern-primary">Pouring the perfect beer for you... 🍺</p>
+      <div className="min-h-screen relative overflow-hidden tavern-bg wood-texture">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-bounce text-6xl mb-4">🍺</div>
+            <p className="text-xl font-semibold text-tavern-primary">Pouring the perfect ale for you..</p>
+          </div>
+        </div>
       </div>
     );
   }

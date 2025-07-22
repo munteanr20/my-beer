@@ -499,3 +499,123 @@
 .notification-exit {
   animation: slideOutToBottom 0.3s ease-in;
 }
+
+/* Custom animations for profile page */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* Enhanced hover effects */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Glassmorphism enhancements */
+.glass-effect {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Gradient text effects */
+.gradient-text {
+  background: linear-gradient(135deg, var(--tavern-gold), var(--tavern-copper));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Enhanced tab navigation styles */
+.tab-underline {
+  position: relative;
+  overflow: hidden;
+}
+
+.tab-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--tavern-gold), var(--tavern-copper));
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.tab-underline:hover::after {
+  width: 100%;
+}
+
+.tab-underline.active::after {
+  width: 100%;
+}
+
+/* Tab hover effects */
+.tab-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-hover:hover {
+  transform: translateY(-2px);
+}
+
+/* Decorative elements */
+.decorative-line {
+  background: linear-gradient(90deg, transparent, var(--tavern-copper), transparent);
+  height: 1px;
+  opacity: 0.6;
+}
+
+/* Animated Gradient */
+@keyframes gradient {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 3s ease infinite;
+}
+
+/* Hero section theme enhancements */
+.hero-badge {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(44, 24, 16, 0.1));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+[data-theme="light"] .hero-badge {
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(255, 248, 220, 0.1));
+  border: 1px solid rgba(184, 134, 11, 0.3);
+}
+
+.hero-feature-pill {
+  background: linear-gradient(135deg, rgba(205, 127, 50, 0.1), rgba(44, 24, 16, 0.1));
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(205, 127, 50, 0.2);
+}
+
+[data-theme="light"] .hero-feature-pill {
+  background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(255, 248, 220, 0.1));
+  border: 1px solid rgba(139, 69, 19, 0.2);
+}

@@ -1,6 +1,16 @@
-import { doc, getDoc, setDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, collection, getDocs, query, orderBy, startAt, endAt } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { User, UserAchievement, ApiResponse } from '../types';
+
+function formatEmailName(raw: string | undefined) {
+  if (!raw) return '';
+  return raw
+    .split('.')
+    .map(
+      part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+    )
+    .join(' ');
+}
 
 export class UserService {
   private collectionName = 'users';
@@ -14,10 +24,15 @@ export class UserService {
       
       if (!userDoc.exists()) {
         // Create new user
+        const emailPrefix = userData.email?.split('@')[0];
+        const formattedName = userData.displayName || formatEmailName(emailPrefix);
+
         const newUser: User = {
           ...userData,
           role: 'user', // Default role for new users
           achievements: [],
+          displayName: formattedName,
+          displayNameLower: formattedName.toLowerCase(),
           createdAt: new Date(),
           updatedAt: new Date()
         };
@@ -28,6 +43,7 @@ export class UserService {
         // Update existing user
         const updateData = {
           ...userData,
+          displayNameLower: userData.displayName?.toLowerCase() || null,
           updatedAt: new Date()
         };
         
@@ -58,6 +74,25 @@ export class UserService {
     } catch (error) {
       console.error('Error getting user:', error);
       return null;
+    }
+  }
+
+  async searchUsersByName (searchTerm: string) : Promise<User[]> {
+    try{
+      const usersRef = collection(db, this.collectionName);
+      const q = query(usersRef, orderBy("displayNameLower"), startAt(searchTerm), endAt(searchTerm + "\uf8ff"));
+      const querySnapshot = await getDocs(q);
+      const users: User[] = [];
+
+      querySnapshot.forEach((doc) => {
+        users.push({ uid: doc.id, ...doc.data() } as User);
+      });
+
+      return users;
+
+    } catch (error){
+      console.error ("Error getting users", error);
+      return [];
     }
   }
 

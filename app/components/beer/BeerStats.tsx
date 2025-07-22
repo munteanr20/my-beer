@@ -5,6 +5,7 @@ import { Beer, BeerStats as BeerStatsType } from '../../types';
 
 interface BeerStatsProps {
   userId: string;
+  variant?: 'dashboard' | 'profile';
 }
 
 interface Stats {
@@ -18,7 +19,7 @@ interface Stats {
   averageBeersPerWeek: number;
 }
 
-export default function BeerStats({ userId }: BeerStatsProps) {
+export default function BeerStats({ userId, variant = 'dashboard' }: BeerStatsProps) {
   const { beers, loading } = useBeers(userId);
 
   const calculateStats = (beers: Beer[]): Stats => {
@@ -147,93 +148,181 @@ export default function BeerStats({ userId }: BeerStatsProps) {
   return (
     <div className="tavern-glass rounded-xl p-6 border border-[var(--tavern-copper)] border-2">
       <h3 className="heading-font text-xl font-bold text-tavern-primary mb-6">
-        Your Beer Journey Stats
+        {variant === 'dashboard' ? 'Quick Stats' : 'Your Beer Journey Stats'}
       </h3>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Beers */}
-        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="body-font text-tavern-primary text-sm">Total Beers</p>
-              <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalBeers}</p>
+      {variant === 'dashboard' ? (
+        // Dashboard - Enhanced Quick Stats
+        <div className="space-y-6">
+          {/* Main Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {/* Total Beers */}
+            <div className="group tavern-glass rounded-xl p-4 border border-[var(--tavern-copper)] hover:border-[var(--tavern-gold)] transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm opacity-80">Total Beers</p>
+                  <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalBeers}</p>
+                </div>
+                <div className="text-2xl group-hover:scale-110 transition-transform duration-300">🍺</div>
+              </div>
             </div>
-            <div className="text-2xl">🍺</div>
-          </div>
-        </div>
 
-        {/* Total Liters */}
-        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="body-font text-tavern-primary text-sm">Total Liters</p>
-              <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalLiters.toFixed(1)}L</p>
+            {/* This Week */}
+            <div className="group tavern-glass rounded-xl p-4 border border-[var(--tavern-copper)] hover:border-[var(--tavern-gold)] transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm opacity-80">This Week</p>
+                  <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.beersThisWeek}</p>
+                </div>
+                <div className="text-2xl group-hover:scale-110 transition-transform duration-300">📅</div>
+              </div>
             </div>
-            <div className="text-2xl">🥃</div>
-          </div>
-        </div>
 
-        {/* Average Alcohol */}
-        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="body-font text-tavern-primary text-sm">Avg. Alcohol</p>
-              <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.averageAlcohol.toFixed(1)}%</p>
+            {/* Total Liters */}
+            <div className="group tavern-glass rounded-xl p-4 border border-[var(--tavern-copper)] hover:border-[var(--tavern-gold)] transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm opacity-80">Total Liters</p>
+                  <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalLiters.toFixed(1)}L</p>
+                </div>
+                <div className="text-2xl group-hover:scale-110 transition-transform duration-300">🥃</div>
+              </div>
             </div>
-            <div className="text-2xl">⚡</div>
-          </div>
-        </div>
 
-        {/* Total Alcohol */}
-        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="body-font text-tavern-primary text-sm">Total Alcohol</p>
-              <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalAlcohol.toFixed(4)}L</p>
+            {/* Average Alcohol */}
+            <div className="group tavern-glass rounded-xl p-4 border border-[var(--tavern-copper)] hover:border-[var(--tavern-gold)] transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm opacity-80">Avg. Alcohol</p>
+                  <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.averageAlcohol.toFixed(1)}%</p>
+                </div>
+                <div className="text-2xl group-hover:scale-110 transition-transform duration-300">⚡</div>
+              </div>
             </div>
-            <div className="text-2xl">🔥</div>
+          </div>
+
+          {/* Additional Quick Info */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="group tavern-glass rounded-xl p-4 border border-[var(--tavern-copper)] hover:border-[var(--tavern-gold)] transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm opacity-80">This Month</p>
+                  <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.beersThisMonth} beers</p>
+                </div>
+                <div className="text-xl group-hover:scale-110 transition-transform duration-300">📊</div>
+              </div>
+            </div>
+            
+            <div className="group tavern-glass rounded-xl p-4 border border-[var(--tavern-copper)] hover:border-[var(--tavern-gold)] transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm opacity-80">Avg. per Week</p>
+                  <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.averageBeersPerWeek.toFixed(1)}</p>
+                </div>
+                <div className="text-xl group-hover:scale-110 transition-transform duration-300">📈</div>
+              </div>
+            </div>
+            
+            <div className="group tavern-glass rounded-xl p-4 border border-[var(--tavern-copper)] hover:border-[var(--tavern-gold)] transition-all duration-300">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm opacity-80">Favorite Type</p>
+                  <p className="heading-font text-lg font-bold text-tavern-secondary">{stats.favoriteType}</p>
+                </div>
+                <div className="text-xl group-hover:scale-110 transition-transform duration-300">⭐</div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        // Profile - Versiune completă
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Total Beers */}
+            <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm">Total Beers</p>
+                  <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalBeers}</p>
+                </div>
+                <div className="text-2xl">🍺</div>
+              </div>
+            </div>
 
-      {/* Additional Stats */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
-          <p className="body-font text-tavern-primary text-sm">This Week</p>
-          <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.beersThisWeek} beers</p>
-        </div>
-        
-        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
-          <p className="body-font text-tavern-primary text-sm">This Month</p>
-          <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.beersThisMonth} beers</p>
-        </div>
-        
-        <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
-          <p className="body-font text-tavern-primary text-sm">Avg. per Week</p>
-          <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.averageBeersPerWeek.toFixed(1)}</p>
-        </div>
-      </div>
+            {/* Total Liters */}
+            <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm">Total Liters</p>
+                  <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalLiters.toFixed(1)}L</p>
+                </div>
+                <div className="text-2xl">🥃</div>
+              </div>
+            </div>
 
-      {/* Favorite Type */}
-      <div className="mt-6 tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
-        <p className="body-font text-tavern-primary text-sm mb-2">Favorite Beer Type</p>
-        <p className="heading-font text-lg font-bold text-tavern-secondary">{stats.favoriteType}</p>
-      </div>
+            {/* Average Alcohol */}
+            <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm">Avg. Alcohol</p>
+                  <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.averageAlcohol.toFixed(1)}%</p>
+                </div>
+                <div className="text-2xl">⚡</div>
+              </div>
+            </div>
 
-      {/* Progress Bar for Total Beers */}
-      {stats.totalBeers > 0 && (
-        <div className="mt-6">
-          <div className="flex justify-between items-center mb-2">
-            <p className="body-font font-bold text-tavern-primary text-sm">Beer Collection Progress</p>
-            <p className="body-font font-bold text-tavern-primary text-sm">{stats.totalBeers} beers</p>
+            {/* Total Alcohol */}
+            <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="body-font text-tavern-primary text-sm">Total Alcohol</p>
+                  <p className="heading-font text-2xl font-bold text-tavern-secondary">{stats.totalAlcohol.toFixed(4)}L</p>
+                </div>
+                <div className="text-2xl">🔥</div>
+              </div>
+            </div>
           </div>
-          <div className="w-full bg-[var(--tavern-copper)] rounded-full h-3">
-            <div 
-              className="bg-[var(--tavern-dark)] h-3 rounded-full transition-all duration-300"
-              style={{ width: `${Math.min(100, (stats.totalBeers / 100) * 100)}%` }}
-            ></div>
+
+          {/* Additional Stats */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+              <p className="body-font text-tavern-primary text-sm">This Week</p>
+              <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.beersThisWeek} beers</p>
+            </div>
+            
+            <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+              <p className="body-font text-tavern-primary text-sm">This Month</p>
+              <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.beersThisMonth} beers</p>
+            </div>
+            
+            <div className="tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+              <p className="body-font text-tavern-primary text-sm">Avg. per Week</p>
+              <p className="heading-font text-xl font-bold text-tavern-secondary">{stats.averageBeersPerWeek.toFixed(1)}</p>
+            </div>
           </div>
-        </div>
+
+          {/* Favorite Type */}
+          <div className="mt-6 tavern-glass rounded-lg p-4 border border-[var(--tavern-copper)] border-2">
+            <p className="body-font text-tavern-primary text-sm mb-2">Favorite Beer Type</p>
+            <p className="heading-font text-lg font-bold text-tavern-secondary">{stats.favoriteType}</p>
+          </div>
+
+          {/* Progress Bar for Total Beers */}
+          {stats.totalBeers > 0 && (
+            <div className="mt-6">
+              <div className="flex justify-between items-center mb-2">
+                <p className="body-font font-bold text-tavern-primary text-sm">Beer Collection Progress</p>
+                <p className="body-font font-bold text-tavern-primary text-sm">{stats.totalBeers} beers</p>
+              </div>
+              <div className="w-full bg-[var(--tavern-copper)] rounded-full h-3">
+                <div 
+                  className="bg-[var(--tavern-dark)] h-3 rounded-full transition-all duration-300"
+                  style={{ width: `${Math.min(100, (stats.totalBeers / 100) * 100)}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

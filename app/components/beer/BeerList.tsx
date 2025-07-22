@@ -8,9 +8,10 @@ import { Beer } from '../../types';
 
 interface BeerListProps {
   userId: string;
+  showHeader?: boolean;
 }
 
-export default function BeerList({ userId }: BeerListProps) {
+export default function BeerList({ userId, showHeader = true }: BeerListProps) {
   const { beers, totalBeers, loading, addBeer } = useBeers(userId);
   const { beerStyles, loading: stylesLoading } = useBeerStyles();
   const { addNotification } = useNotification();
@@ -87,16 +88,18 @@ export default function BeerList({ userId }: BeerListProps) {
   return (
     <>
       <div className="flex flex-col h-full">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-              <h3 className="text-2xl font-semibold mb-6 text-tavern-primary">
-              Your Beer Collection
-            </h3>
-            <p className="body-font font-bold text-tavern-primary text-md">
-              {totalBeers} {totalBeers === 1 ? 'beer' : 'beers'} in your tavern
-            </p>
+        {showHeader && (
+          <div className="flex justify-between items-center mb-6">
+            <div>
+                <h3 className="text-2xl font-semibold mb-6 text-tavern-primary">
+                Your Beer Collection
+              </h3>
+              <p className="body-font font-bold text-tavern-primary text-md">
+                {totalBeers} {totalBeers === 1 ? 'beer' : 'beers'} in your tavern
+              </p>
+            </div>
           </div>
-        </div>
+        )}
         
         <div className="space-y-4 flex-1 overflow-y-auto custom-scrollbar max-h-[500px]">
           {beers.slice(0, 5).map((beer, index) => (
