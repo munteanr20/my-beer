@@ -1,11 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useAchievements } from '../../hooks/useAchievements';
 import { useBeers } from '../../hooks/useBeers';
-import { useBeerStyles } from '../../hooks/useBeerStyles';
-import { userService } from '../../services/userService';
 import { User } from '../../types';
 import BeerStats from '../beer/BeerStats';
 import BeerList from '../beer/BeerList';
@@ -16,35 +14,16 @@ import { LeaderboardProvider } from '../../contexts/LeaderboardContext';
 
 type ProfileTab = 'overview' | 'collection' | 'achievements' | 'settings';
 
-export default function ProfilePage() {
+export default function ProfilePage({ userData }: { userData: User | null }) {
   const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
-  const [userData, setUserData] = useState<User | null>(null);
+  const isOwnProfile = user?.uid === userData?.uid;
   
   // Get real achievement data
-  const { achievements, loading: achievementsLoading, unlockedCount, totalCount } = useAchievements(user?.uid || '');
+  const { achievements, loading: achievementsLoading, unlockedCount, totalCount } = useAchievements(userData?.uid || '');
   
   // Get beer data for enhanced insights
-  const { beers, totalBeers, loading: beersLoading } = useBeers(user?.uid || '');
-  const { beerStyles, loading: stylesLoading } = useBeerStyles();
-
-  // Fetch user data with creation date
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (user?.uid) {
-        try {
-          const data = await userService.getUser(user.uid);
-          if (data) {
-            setUserData(data);
-          }
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      }
-    };
-
-    fetchUserData();
-  }, [user?.uid]);
+  const { beers, totalBeers, loading: beersLoading } = useBeers(userData?.uid || '');
 
   // Calculate total alcohol more accurately
   const totalAlcohol = beers.reduce((total, beer) => {
@@ -57,8 +36,6 @@ export default function ProfilePage() {
       const cleanQuantity = beer.quantity.replace(/[^\d.]/g, '');
       const quantity = parseFloat(cleanQuantity);
       
-      // Calculate pure alcohol in liters: (alcohol_percentage / 100) * quantity_ml / 1000
-      // Example: 5% alcohol in 330ml = (5/100) * 330 / 1000 = 0.0165 liters pure alcohol
       if (!isNaN(alcohol) && !isNaN(quantity) && alcohol > 0 && quantity > 0) {
         return total + (alcohol / 100) * (quantity / 1000);
       }
@@ -106,16 +83,16 @@ export default function ProfilePage() {
               {/* Enhanced Profile Image with Animation */}
               <div className="flex-shrink-0 relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-[var(--tavern-gold)] to-[var(--tavern-copper)] rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-                {user.photoURL ? (
+                {userData?.photoURL ? (
                   <img
-                    src={user.photoURL}
+                    src={userData.photoURL}
                     alt="Profile"
                     className="relative w-28 h-28 rounded-full border-4 border-[var(--tavern-gold)] shadow-2xl group-hover:scale-105 transition-all duration-300"
                   />
                 ) : (
                   <div className="relative w-28 h-28 bg-gradient-to-br from-[var(--tavern-copper)] to-[var(--tavern-gold)] rounded-full flex items-center justify-center shadow-2xl group-hover:scale-105 transition-all duration-300">
                     <span className="text-[var(--tavern-dark)] text-4xl font-bold">
-                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
+                      {userData?.displayName ? userData.displayName.charAt(0).toUpperCase() : userData?.email?.charAt(0).toUpperCase()}
                     </span>
                   </div>
                 )}
@@ -124,10 +101,10 @@ export default function ProfilePage() {
               {/* Enhanced Profile Info with Better Typography */}
               <div className="flex-1 text-center md:text-left">
                 <h2 className="heading-font text-4xl font-bold text-tavern-secondary mb-3" style={{ textShadow: '2px 2px 4px var(--tavern-dark)' }}>
-                  {user.displayName || user.email?.split('@')[0]}
+                  {userData?.displayName || userData?.email?.split('@')[0]}
                 </h2>
                 <p className="body-font text-tavern-primary text-xl mb-3 opacity-90">
-                  {user.email}
+                  {userData?.email}
                 </p>
                 <div className="inline-flex items-center space-x-2 bg-[var(--tavern-copper)]/20 px-4 py-2 rounded-full">
                   <span className="text-sm">🍺</span>
@@ -179,15 +156,17 @@ export default function ProfilePage() {
 
               {/* Enhanced Quick Actions with Better Styling */}
               <div className="flex flex-col space-y-3">
-                <a
-                  href="/"
-                  className="beer-button px-6 py-3 rounded-xl text-sm flex items-center space-x-3 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-                  </svg>
-                  <span className="font-semibold">Add Beer</span>
-                </a>
+                {isOwnProfile && (
+                  <a
+                    href="/"
+                    className="beer-button px-6 py-3 rounded-xl text-sm flex items-center space-x-3 hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    <span className="font-semibold">Add Beer</span>
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -234,7 +213,7 @@ export default function ProfilePage() {
             <div className="space-y-8 animate-fadeIn">
               {/* Enhanced Statistics Section */}
               <div className="transform hover:scale-[1.02] transition-transform duration-300">
-                <BeerStats userId={user.uid} variant="profile" />
+                <BeerStats userId={userData?.uid || ''} variant="profile" />
               </div>
               
               {/* Personal Beer Journey Insights */}
@@ -560,7 +539,7 @@ export default function ProfilePage() {
               
               {/* Beer List */}
               <div className="tavern-glass rounded-2xl p-8 border border-[var(--tavern-copper)] shadow-2xl">
-                <BeerList userId={user.uid} showHeader={false} />
+                <BeerList userId={userData?.uid || ''} showHeader={false} />
               </div>
             </div>
           )}
@@ -601,7 +580,7 @@ export default function ProfilePage() {
               
               {/* Achievement List */}
               <div className="tavern-glass rounded-2xl p-8 border border-[var(--tavern-copper)] shadow-2xl">
-                <AchievementList userId={user.uid} showHeader={false} />
+                <AchievementList userId={userData?.uid || ''} showHeader={false} />
               </div>
             </div>
           )}
@@ -631,12 +610,12 @@ export default function ProfilePage() {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span className="body-font text-tavern-primary opacity-80">Email</span>
-                        <span className="body-font text-tavern-primary font-medium">{user.email}</span>
+                        <span className="body-font text-tavern-primary font-medium">{userData?.email}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="body-font text-tavern-primary opacity-80">Display Name</span>
                         <span className="body-font text-tavern-primary font-medium">
-                          {user.displayName || 'Not set'}
+                          {userData?.displayName || 'Not set'}
                         </span>
                       </div>
                       <div className="flex justify-between items-center">

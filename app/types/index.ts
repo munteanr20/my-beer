@@ -9,6 +9,7 @@ export interface User {
   uid: string;
   email: string | null;
   displayName: string | null;
+  displayNameLower: string | null;
   photoURL: string | null;
   role?: 'user' | 'admin' | 'owner' | 'moderator';
   achievements?: UserAchievement[];

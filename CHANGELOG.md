@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [v1.3.0] - 2025-07-22
+
+### Added
+- User search bar with live search and dropdown results (desktop and mobile)
+- Navigation to user profile pages from search results
+
+### Changed
+- Refactored ProfilePage to accept userData as a prop and fetch data server-side
+- Disabled 'Add Beer' button on other users' profiles
+- Improved profile dropdown menu logic for desktop/mobile separation
+
+### Fixed
+- Firestore Timestamp serialization for Next.js App Router compatibility
+- Various UI/UX improvements to search and profile flows 
+
 ## [v1.2.3] - 2025-07-20
 
 ### Added
