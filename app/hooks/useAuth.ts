@@ -32,6 +32,7 @@ export const useAuth = () => {
           uid: user.uid,
           email: user.email,
           displayName: user.displayName,
+          displayNameLower: user.displayName ? user.displayName.toLowerCase() : null,
           photoURL: user.photoURL
         };
         setUser(authUser);
