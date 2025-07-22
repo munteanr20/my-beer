@@ -13,8 +13,6 @@ function serializeUser(user: User | null) {
 }
 
 export default async function UserProfilePage({ params }: { params: { uid: string } }) {
-  
-  const { uid } = await Promise.resolve(params);
-  const userData = await userService.getUser(uid);
+  const userData = await userService.getUser(params.uid);
   return <ProfilePage userData={serializeUser(userData)} />;
 } 
